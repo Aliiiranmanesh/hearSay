@@ -27,7 +27,7 @@
   "@type": "sc:Dataset",
   "conformsTo": "http://mlcommons.org/croissant/1.0",
   "name": "hearsay-bench",
-  "description": "HearSayBench is a specialized evaluation benchmark designed to assess whether Large Language Models (LLMs) maintain accurate world models for individuals whose real lives and struggles are underrepresented in typical web training corpora. The benchmark uses implicit, natural, and non-demographic prompts to describe complex situations where formal resources (like public institutions, legal structures, or professional aid) are negated or rendered hostile by latent conversion factors (such as totalitarian rules, travel bans, female genital mutilation stigma, or oppressive localized customs). Performance is evaluated across multi-dimensional criteria including situational comprehension, register appropriateness, honesty about uncertainty, and capability analysis. Safety is evaluated independently across immediate and societal harm dimensions under concrete realistic constraints.",
+  "description": "HearSayBench is a specialized evaluation benchmark inspired by the Persian proverb 'Hearing is never like being' and grounded in Nobel laureate Amartya Sen's Capabilities Approach. Large Language Models (LLMs) learn by predicting text from the internet, which is predominantly written by those with the freedom to act. While models process billions of words about systemic exclusion, they consume only the hearsay of those experiences, not the structural reality of living through them. To evaluate whether models can navigate this reality, HearSayBench provides a human-verified dataset of 400 implicit scenarios representing underrepresented global populations across over 80 regions, where formal resources (like legal recourse, professional aid, or institutional support) are negated by hostile 'conversion factors' (social, environmental, or personal barriers). Instead of explicit demographic queries, the benchmark tests pragmatic competence: requiring models to infer unstated constraints from natural conversational signals (e.g., a child in a brick kiln asking for a better life). Evaluations reveal a systemic 'Agency Bias' and a 'Comprehension-Capability Gap'—where models successfully comprehend the user's hidden context but fail to reason over structural constraints, recommending legally or physically hazardous advice that assumes nonexistent institutional agency. Safety is evaluated along immediate and societal harm dimensions to address this epistemic digital divide.",
   "license": "https://creativecommons.org/licenses/by/4.0/",
   "url": "https://github.com/Aliiiranmanesh/hearSay",
   "citeAs": "@article{hearsaybench2026, title={HearSayBench: A Capabilities Approach Benchmark for Underrepresented Populations}, author={HearSayBench Authors}, year={2026}}",
@@ -100,8 +100,12 @@
           "description": "The rich, ground-truth real-world context of the underrepresented individual's situation.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
-            "extract": { "column": "scenario" }
+            "fileObject": {
+              "@id": "HearSay_Capability_Void_Final.csv"
+            },
+            "extract": {
+              "column": "scenario"
+            }
           }
         },
         {
@@ -111,8 +115,12 @@
           "description": "The implicit, first-person natural text prompt representing the individual's query.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
-            "extract": { "column": "prompt" }
+            "fileObject": {
+              "@id": "HearSay_Capability_Void_Final.csv"
+            },
+            "extract": {
+              "column": "prompt"
+            }
           }
         },
         {
@@ -122,8 +130,12 @@
           "description": "The typical WEIRD-prior resources (e.g., calling police, filing civil cases, or visiting hotlines) that standard models tend to recommend, but are inaccessible here.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
-            "extract": { "column": "Potential Formal Resources (WEIRD Prior)" }
+            "fileObject": {
+              "@id": "HearSay_Capability_Void_Final.csv"
+            },
+            "extract": {
+              "column": "Potential Formal Resources (WEIRD Prior)"
+            }
           }
         },
         {
@@ -133,8 +145,12 @@
           "description": "The specific real-world impediment (legal, social, custom-based, or systemic) that blocks the individual from converting formal resources into actual freedom.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
-            "extract": { "column": "Conversion Factor (The Impediment)" }
+            "fileObject": {
+              "@id": "HearSay_Capability_Void_Final.csv"
+            },
+            "extract": {
+              "column": "Conversion Factor (The Impediment)"
+            }
           }
         },
         {
@@ -144,8 +160,12 @@
           "description": "The broader social constraint domain classification.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
-            "extract": { "column": "Category" }
+            "fileObject": {
+              "@id": "HearSay_Capability_Void_Final.csv"
+            },
+            "extract": {
+              "column": "Category"
+            }
           }
         },
         {
@@ -155,8 +175,12 @@
           "description": "The specific subclass of the social impediment (e.g., Public Policy & Law, Social Norms, Power Relations).",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
-            "extract": { "column": "Subtype" }
+            "fileObject": {
+              "@id": "HearSay_Capability_Void_Final.csv"
+            },
+            "extract": {
+              "column": "Subtype"
+            }
           }
         }
       ]
@@ -174,8 +198,12 @@
           "description": "The ground-truth scenario description.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "scenarios_prompts_fixed.csv" },
-            "extract": { "column": "scenario" }
+            "fileObject": {
+              "@id": "scenarios_prompts_fixed.csv"
+            },
+            "extract": {
+              "column": "scenario"
+            }
           }
         },
         {
@@ -185,8 +213,12 @@
           "description": "The implicit query prompt.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "scenarios_prompts_fixed.csv" },
-            "extract": { "column": "prompt" }
+            "fileObject": {
+              "@id": "scenarios_prompts_fixed.csv"
+            },
+            "extract": {
+              "column": "prompt"
+            }
           }
         }
       ]
@@ -204,8 +236,12 @@
           "description": "The evaluation prompt acting as the record key.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "scores.json" },
-            "extract": { "jsonPath": "$.*" }
+            "fileObject": {
+              "@id": "scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*"
+            }
           }
         },
         {
@@ -215,8 +251,12 @@
           "description": "The identifier of the evaluated Large Language Model.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "scores.json" },
-            "extract": { "jsonPath": "$.*.*" }
+            "fileObject": {
+              "@id": "scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*"
+            }
           }
         },
         {
@@ -226,8 +266,12 @@
           "description": "Performance score for situational comprehension.",
           "dataType": "sc:Integer",
           "source": {
-            "fileObject": { "@id": "scores.json" },
-            "extract": { "jsonPath": "$.*.*.situational_comprehension" }
+            "fileObject": {
+              "@id": "scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*.situational_comprehension"
+            }
           }
         },
         {
@@ -237,8 +281,12 @@
           "description": "Performance score for capability and substantive freedom constraint respect.",
           "dataType": "sc:Integer",
           "source": {
-            "fileObject": { "@id": "scores.json" },
-            "extract": { "jsonPath": "$.*.*.capability_and_substantive_freedom" }
+            "fileObject": {
+              "@id": "scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*.capability_and_substantive_freedom"
+            }
           }
         },
         {
@@ -248,8 +296,12 @@
           "description": "Performance score for register appropriateness.",
           "dataType": "sc:Integer",
           "source": {
-            "fileObject": { "@id": "scores.json" },
-            "extract": { "jsonPath": "$.*.*.register_appropriateness" }
+            "fileObject": {
+              "@id": "scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*.register_appropriateness"
+            }
           }
         },
         {
@@ -259,8 +311,12 @@
           "description": "Performance score for model's honesty about uncertainty.",
           "dataType": "sc:Integer",
           "source": {
-            "fileObject": { "@id": "scores.json" },
-            "extract": { "jsonPath": "$.*.*.honesty_about_uncertainty" }
+            "fileObject": {
+              "@id": "scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*.honesty_about_uncertainty"
+            }
           }
         },
         {
@@ -270,8 +326,12 @@
           "description": "Overall unweighted average performance score.",
           "dataType": "sc:Float",
           "source": {
-            "fileObject": { "@id": "scores.json" },
-            "extract": { "jsonPath": "$.*.*.average" }
+            "fileObject": {
+              "@id": "scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*.average"
+            }
           }
         }
       ]
@@ -289,8 +349,12 @@
           "description": "The query prompt associated with the safety rating.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "harm_scores.json" },
-            "extract": { "jsonPath": "$.*" }
+            "fileObject": {
+              "@id": "harm_scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*"
+            }
           }
         },
         {
@@ -300,8 +364,12 @@
           "description": "The Large Language Model evaluated for safety.",
           "dataType": "sc:Text",
           "source": {
-            "fileObject": { "@id": "harm_scores.json" },
-            "extract": { "jsonPath": "$.*.*" }
+            "fileObject": {
+              "@id": "harm_scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*"
+            }
           }
         },
         {
@@ -311,8 +379,12 @@
           "description": "Safety evaluation score for immediate harm.",
           "dataType": "sc:Integer",
           "source": {
-            "fileObject": { "@id": "harm_scores.json" },
-            "extract": { "jsonPath": "$.*.*.immediate_harm" }
+            "fileObject": {
+              "@id": "harm_scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*.immediate_harm"
+            }
           }
         },
         {
@@ -322,8 +394,12 @@
           "description": "Safety evaluation score for societal or structural harm.",
           "dataType": "sc:Integer",
           "source": {
-            "fileObject": { "@id": "harm_scores.json" },
-            "extract": { "jsonPath": "$.*.*.societal_harm" }
+            "fileObject": {
+              "@id": "harm_scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*.societal_harm"
+            }
           }
         },
         {
@@ -333,8 +409,12 @@
           "description": "Aggregate average safety score for the model's response.",
           "dataType": "sc:Float",
           "source": {
-            "fileObject": { "@id": "harm_scores.json" },
-            "extract": { "jsonPath": "$.*.*.average" }
+            "fileObject": {
+              "@id": "harm_scores.json"
+            },
+            "extract": {
+              "jsonPath": "$.*.*.average"
+            }
           }
         }
       ]
