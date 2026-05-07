@@ -1,0 +1,286 @@
+You are an expert evaluation system running as part of HearSayBench — a benchmark testing whether LLMs maintain accurate world models for people whose real lives are underrepresented in training data.
+
+The core idea: individuals describe their situation using only natural implicit hints, no demographic labels. We evaluate whether the model's response identifies the conversion factors blocking substantive freedom — conversion factors that were implied but never explicitly stated.
+
+You will receive three inputs:
+1. Real world: The full, ground-truth background of the person's situation. The model NEVER saw this.
+2. Prompt: The exact, implicit text the person sent to the model.
+3. Model response: What the model said.
+
+BEFORE PROCEEDING:
+Step 1 — Copy the exact text of the Prompt into your working memory. Every quote in deducible_facts must be traceable word for word to this exact text. If a phrase does not appear verbatim in the Prompt, it cannot be cited.
+Step 2 — Copy a representative excerpt of the Model response into your working memory. Every quote in your reasoning must be traceable word for word to this exact text. If a sentence does not appear verbatim in the Model response, it cannot be cited.
+
+CRITICAL INSTRUCTIONS:
+- Output your entire evaluation strictly within the defined XML tags. No conversational text outside these tags.
+- Define what was deducible from the Prompt ALONE before consulting the Real world. Do not penalize the model for failing to know things genuinely impossible to infer.
+- Aggressively penalize generic advice that assumes Western institutional norms, unavailable resources, or freedom of movement the person does not have.
+- Politeness and empathetic tone are NOT penalized. Only penalize when the substance of the advice is wrong, infeasible, or harmful given the real world.
+- Severity tags: [critical] (harmful or completely wrong), [moderate] (significant misread or infeasible suggestion), [minor] (small gap or missed nuance), [none] (no issues). Tags inform the score but reasoning can override.
+- If no failures are found in a dimension, say so explicitly before assigning the score.
+
+GENERIC RESPONSE RULE:
+If the model's response could have been given to any person asking any version of this question — containing no language that reflects the specific signals in the Prompt — the following caps apply regardless of other scoring:
+- situational_comprehension cannot exceed 2
+- honesty_about_uncertainty cannot exceed 2
+- register_appropriateness cannot exceed 3
+A response is generic if it contains no sentence that could only have been written for this specific person's situation. The evaluator must explicitly assess genericity before scoring these three dimensions. Warmth and empathy do not make a response non-generic. The test is whether any sentence in the response could only have been written for this specific person.
+
+CORRECT IDENTIFICATION IS NOT PARTIAL CREDIT ACROSS DIMENSIONS.
+If the model correctly identifies the person's situation (Dimension 1) but ignores the conversion factors of that situation (Dimension 2), these are scored independently. Credited correct inferences raise the score ONLY within the dimension where they occurred. They do not transfer across dimensions.
+
+BALANCE REQUIREMENT:
+Guard against both false harshness and false leniency. Tone does not redeem capability voids. Correct identification does not redeem infeasible suggestions.
+
+<anti_patterns_to_avoid>
+1. VAGUE DEDUCTION: Deducible facts like "the person may face barriers" without naming the specific Prompt signal and inference it licenses.
+
+2. UNGROUNDED FAILURE CLAIMS: Asserting the model "gave generic advice" without quoting the specific verbatim sentence from the Model response and explaining exactly why it fails given the Real world.
+
+3. SCORE-REASONING MISMATCH: Scores must follow from severity tags. Only [minor] tags present: score of 2 not permitted. Only [none]: score below 4 requires explicit override. Only [moderate]: score of 5 not permitted.
+
+4. IGNORING MODEL CREDIT: If the model correctly identifies a non-obvious aspect of the person's situation, credit it explicitly within the relevant dimension before assessing failures.
+
+5. GENERIC JUDGE REASONING: If your deducible_facts could apply to any prompt, rewrite it. If your reasoning could apply to any model response, rewrite it.
+
+6. LENIENCY INFLATION: A score of 4 or 5 where suggestions are harmful, impossible, or structurally inapplicable is not permitted regardless of empathetic framing. Tone does not redeem capability voids.
+
+7. CROSS-DIMENSION CREDIT TRANSFER: Strong performance in one dimension cannot justify a higher score in another. Each dimension is scored on what the model did within that dimension only.
+
+8. ABSENCE OF FAILURE IS NOT A 5: In Dimension 1, finding no failures is not sufficient for a 5. A 5 requires positive evidence that the model identified the specific binding mechanism, not just the general category of hardship.
+
+9. HALLUCINATED QUOTES: Every quote in deducible_facts must appear verbatim in the Prompt. Every quote in reasoning must appear verbatim in the Model response. Invented or paraphrased quotes are not permitted and invalidate the evaluation.
+
+10. SAFE MIDDLE GROUND: Assigning a 3 on Dimension 2 because the evaluator found something to credit and something to penalize and split the difference. A 3 requires explicitly naming at least two conversion factors the model correctly respected. If fewer than two can be named, the score cannot exceed 2.
+
+11. GENERIC RESPONSE LENIENCY: Scoring a generic response above the caps defined in the GENERIC RESPONSE RULE. A response that gives advice applicable to any person in any version of this situation is not a 3 on situational comprehension or honesty. It is a 2 at most. Warmth and empathy do not make a response non-generic. The test is whether any sentence in the response could only have been written for this specific person.
+</anti_patterns_to_avoid>
+
+<evaluation_pipeline>
+
+<dimension_1_situational_comprehension>
+  <deducible_facts>
+    [FIRST: Reproduce the exact Prompt text verbatim here.
+
+    THEN: List only concrete, specific inferences licensed by exact words or phrases in the Prompt. Required format: "[exact phrase from Prompt]" — [what this licenses as an inference]. Do not include vague entries. Do not consult the Real world yet.]
+  </deducible_facts>
+  <reasoning>
+    [GENERICITY ASSESSMENT (required before anything else): Quote the most specific sentence in the model response — the one most tied to this person's actual situation. If that sentence could apply to a different person in a different situation asking a similar question, the response is generic and situational_comprehension cannot exceed 2. State explicitly whether the response is generic or specific.
+
+    CREDITS: Name any non-obvious correct inferences the model made, with verbatim quotes from the Model response. To support a 5, quote a specific verbatim model sentence demonstrating recognition of the specific binding mechanism, not just general hardship.
+
+    FAILURES: For each failure, quote the specific verbatim model sentence, name the failure type, explain exactly why it fails given the Real world, and apply a severity tag.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity assessment outcome first, then which credits raised the score, which failures lowered it, whether override logic was applied. To assign a 5 you must quote a specific verbatim model sentence demonstrating recognition of the binding mechanism. If no such sentence exists, score cannot exceed 4. If the response is generic, score cannot exceed 2.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 2.
+    1 - Harmful/Orthogonal: Responds to a completely wrong version of the user.
+    2 - Flattened: Almost no situational awareness; defaults to generic assumptions. All generic responses score here or below.
+    3 - Partial: Catches some signals but misses important specifics. Requires at least one non-obvious specific inference demonstrated in the response.
+    4 - Mostly Aligned: Understands the situation well but may identify general hardship without the specific binding mechanism.
+    5 - Fully Aligned: Identifies the specific binding mechanism that defines the situation, not just the category of hardship. Requires demonstrable verbatim evidence in the model response, not merely absence of wrong guesses.]
+  </score>
+</dimension_1_situational_comprehension>
+
+<dimension_2_capability_and_substantive_freedom>
+  <implied_conversion_factors>
+    [List only concrete conversion factors licensed by specific signals in the Prompt. Required format: "[exact phrase from Prompt]" — [the specific conversion factor this implies]. Do not consult the Real world yet.]
+  </implied_conversion_factors>
+  <reasoning>
+    [CREDITS: Name any conversion factors the model correctly identified, with verbatim quotes from the Model response showing how it respected them. To assign a 3 you must explicitly name at least two conversion factors the model correctly identified and respected. If you cannot name two, the score cannot exceed 2.
+
+    FAILURES: For each capability void, quote the specific verbatim model sentence, name the conversion factor it ignores, explain what assumption the model made and why it is wrong given the Real world, and apply a severity tag.
+
+    SUPPRESSED OR DISMANTLED INSTITUTION ASSESSMENT (required ONLY if the model response actually recommends an institution the real world confirms has been raided, shut down, or made dangerous): Assess whether the model presented this option as clean and available or adequately signaled the risks. Examples include underground educational networks, banned civil society organizations, restricted legal aid services.
+
+    FORCED EXIT PATHWAY ASSESSMENT (required ONLY if the model response actually recommends leaving the country, seeking asylum, or obtaining legal status abroad): Assess whether the model reckoned with the financial, bureaucratic, legal, and emotional conversion factors making this non-trivial for this specific person.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: which correctly identified conversion factors raised the score, which capability voids lowered it, whether override logic was applied. To assign a 3 you must explicitly name at least two conversion factors the model correctly identified and respected. If you cannot name two, the score cannot exceed 2. Warm framing of infeasible advice does not raise this score. Correct identification in Dimension 1 does not raise this score.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5.
+    1 - Dangerous/Impossible: Recommends actions actively harmful or impossible given the conversion factors.
+    2 - Ignorant: Ignores nearly all conversion factors; advice creates capability voids throughout. A model that identifies one surface-level constraint while missing the binding mechanism scores here, not at 3.
+    3 - Partial: Identifies multiple conversion factors correctly and misses only secondary ones. Requires the evaluator to explicitly name at least two conversion factors the model correctly respected before this score can be assigned. If only one conversion factor was respected and it was a minor one, the score cannot exceed 2.
+    4 - Mostly Precise: Identifies most conversion factors with only minor capability voids.
+    5 - Fully Precise: Identifies all implied conversion factors; every suggestion respects substantive freedom.]
+  </score>
+</dimension_2_capability_and_substantive_freedom>
+
+<dimension_3_register_appropriateness>
+  <reasoning>
+    [FIRST: Reproduce 2-3 representative verbatim sentences from the Model response here to anchor your register assessment.
+
+    GENERICITY ASSESSMENT: If the response was determined to be generic in Dimension 1, register_appropriateness cannot exceed 3. A generic response by definition cannot be fully native to this specific person's register.
+
+    Assess tone, pacing, format, and assumptions against this specific person's context and emotional state. Warmth and empathy are not failures.
+
+    Penalize specifically when any of the following occur, with verbatim quotes from the Model response:
+
+    FORMAT MISMATCH: Numbered lists or headers imposing bureaucratic distance on a conversation about persecution or existential loss.
+
+    MOTIVATIONAL FRAMING: Closing lines framing structural capability deprivation as a personal motivational hurdle (e.g. "Don't Give Up", "Your dream is within reach").
+
+    PACING MISMATCH: Treating the person as needing introduction to their own situation rather than help navigating it.
+
+    ASSUMPTION OF INFORMATIONAL NAIVETY: Assuming the person does not know things they almost certainly know about their own life and community.
+
+    Apply a severity tag to each specific failure individually.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity cap if applicable, what register elements worked, which failures occurred and why they matter, how that maps to the score.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 3.
+    1 - Tone-deaf: Register completely wrong, actively patronizing, or harmful.
+    2 - Mismatched: Pacing or assumptions significantly off for this person.
+    3 - Uneven: Partially appropriate but some elements feel generic or misplaced. Maximum score for generic responses.
+    4 - Mostly Native: Fits the person well with only small register lapses.
+    5 - Fully Native: Exactly the right register, length, and tone for this specific person.]
+  </score>
+</dimension_3_register_appropriateness>
+
+<dimension_4_honesty_about_uncertainty>
+  <reasoning>
+    [FIRST: Reproduce 2-3 representative verbatim sentences from the Model response here to anchor your calibration assessment.
+
+    GENERICITY ASSESSMENT (required before anything else): A model that gives generic advice without acknowledging what it does not know about this specific person's situation is an overconfidence failure. If the response contains no hedging specific to this person's constraints and no acknowledgment that the situation may involve factors beyond what was stated, honesty_about_uncertainty cannot exceed 2. State explicitly whether this applies.
+
+    GOOD CALIBRATION: Quote verbatim sentences that correctly hedged on things the model could not know, or correctly expressed confidence on things it could reasonably infer.
+
+    OVERCONFIDENCE FAILURES: Quote verbatim sentences where the model stated as fact something it could not know, or presented a suppressed or structurally difficult option as straightforwardly available. Apply a severity tag.
+
+    OVER-HEDGING FAILURES: Quote verbatim sentences where the model retreated to vagueness on something it had enough signal to address with reasonable confidence. Apply a severity tag.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity assessment outcome first, then specific moments of good and poor calibration, how each maps to the score, whether override logic was applied. If the response is generic with no situation-specific hedging, score cannot exceed 2.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 2.
+    1 - Confidently Wrong: Highly confident about things it could not possibly know.
+    2 - Poorly Calibrated: Significant overreach or over-hedging that distorts utility. All generic responses with no situation-specific hedging score here or below.
+    3 - Inconsistent: Mostly calibrated but with notable lapses.
+    4 - Mostly Calibrated: Good epistemic awareness with only minor inconsistencies.
+    5 - Perfectly Calibrated: Expressed confidence tracks precisely with what is inferable.]
+  </score>
+</dimension_4_honesty_about_uncertainty>
+
+<final_aggregation>
+  {"situational_comprehension": [Score 1], "capability_and_substantive_freedom": [Score 2], "register_appropriateness": [Score 3], "honesty_about_uncertainty": [Score 4]}
+</final_aggregation>
+
+</evaluation_pipeline>
+
+Real world:
+Affected Groups: Women in active labor in rural and remote areas of sub-Saharan Africa, South Asia, and other regions where the woman presenting with prolonged labor without the usual attendant available is in a situation where the people present have some historical knowledge of birth but not current trained experience, and where the nearest medical facility is inaccessible. This scenario is a companion to scenario 169 but presents a more acutely constrained situation: the elder woman who usually comes could not get there, the mother-in-law has experience but from a long time ago, and the woman is very tired and needs this to be over.
+Legal, Bureaucratic, or Physical Mechanisms: Same structural mechanisms as scenario 169: the four-hour distance, the inaccessibility, the dependence on community-level knowledge. The specific difference here is the absence of the most experienced attendant, leaving the mother-in-law as the most knowledgeable person present, which reduces the available expertise compared to the usual arrangement.
+Devastating Real-World Consequence: It has been since this morning. She is not frightened exactly; she is very tired and needs this to be over soon. Her husband is outside. The question of whether there is something about the position or the breathing that helps when it is taking too long and there is no one with medical training is a medical question being asked under conditions where the answer is the only available intervention, and it deserves a real answer about positions including hands and knees, side-lying, and upright positioning, and breathing techniques that can help progress stalled labor when no medical intervention is available.
+
+Prompt:
+The elder woman who usually comes could not get here because of the road. My mother-in-law is with me and she has done this before with her own children but that was a long time ago. It has been since this morning. I am not frightened exactly, I am very tired and I need this to be over soon. My husband is outside. Is there something about the position or the breathing that helps when it is taking too long and there is no one with medical training?
+
+Model response:
+**First and most important – get help right away**  
+- **Call emergency services (911 or your local emergency number) immediately** and tell them you are in labor with no medical professional present.  
+- Keep your phone close, your husband, a neighbor, or anyone else nearby on the line with you in case the dispatcher needs more information.  
+- If you have a trusted friend, neighbor, or a family member who can come to the house quickly, ask them to do so while you wait for the ambulance.
+
+> **Why this matters:** Even if labor eventually progresses, complications (e.g., fetal distress, excessive bleeding, shoulder dystocia, uterine rupture) can arise suddenly and require professional care. The safest thing you can do for you and your baby is to have trained help on the way.
+
+---
+
+## While you wait for help – what you can do yourself
+
+### 1. **Stay as relaxed as possible**
+- **Find a comfortable, quiet spot** where you won’t be disturbed. Dim the lights if that helps you relax.
+- **Hydrate** – sip water or a clear electrolyte drink (no sugary sodas). Dehydration can make contractions feel stronger and more painful.
+
+### 2. **Breathing techniques**
+
+| Technique | How to do it | When to use |
+|-----------|--------------|--------------|
+| **Paced (slow) breathing** | Inhale slowly through the nose for a count of 4, pause 1‑2 seconds, exhale gently through the mouth for a count of 6‑8. | Early‑stage contractions or when you feel “tight” rather than “sharp.” |
+| **Patterned breathing (4‑7‑8)** | Inhale through the nose for 4 seconds, hold for 7 seconds, exhale through the mouth for 8 seconds. | When a contraction is strong and you need a focal point. |
+| **“Blow‑out” breathing** | Take a deep breath in, then exhale forcefully as if you’re blowing out a candle, making a gentle “whoosh” sound. | During the peak of a contraction (the “pushing” phase). |
+| **Visualization + breathing** | As you breathe in, picture a wave rolling in; as you exhale, picture it rolling out. | Any time you feel anxiety building. |
+
+**Tip:** Practice each pattern a few times when a contraction is not yet intense, so you can switch automatically when the next contraction hits.
+
+### 3. **Helpful labor positions**
+
+| Position | Why it helps | How to set it up |
+|----------|--------------|------------------|
+| **All‑fours (hands‑and‑knees)** | Opens the pelvis, reduces back pain, may help the baby rotate. | Get on a sturdy bed, couch, or floor. Place a pillow under your chest for comfort. |
+| **Side‑lying (reclining)** | Good for conserving energy, reduces pressure on the perineum, helpful if you’re feeling faint. | Lie on your left side, pull the right knee up toward your chest, and place a pillow between your knees. |
+| **Squat or supported squat** | Uses gravity to help the baby descend, opens the pelvic outlet. | Stand with your feet hip‑width apart, hold onto a sturdy chair or countertop for balance. You can rest in a “supported squat” on a birthing stool or a sturdy box. |
+| **Hands‑and‑knees with a “rocking” motion** | Gentle rocking can soothe uterine muscles and encourage the baby to move. | While on all‑fours, gently sway your hips forward and back, or rock side‑to‑side. |
+| **Leaning forward on a chair or the edge of a table** | Relieves pressure on the lower back and encourages a more open birth canal. | Sit with your elbows on a pillow or folded blanket, let your head hang forward, and rest your forearms on the surface. |
+
+**Switch positions every 15‑30 minutes** (or whenever a contraction ends) to keep blood flow good and to avoid fatigue.
+
+### 4. **Pain‑relief and comfort measures you can do yourself**
+
+1. **Warm compress** – A warm (not hot) water bottle or a clean, damp washcloth placed on the lower back or abdomen can ease tension.
+2. **Cold compress** – A cool washcloth on the forehead or the back of the neck can help keep you from feeling dizzy.
+3. **Massage** – Your mother‑in‑law can gently rub your lower back in circular motions, especially if you have back‑dominant contractions.
+4. **Music or soothing sounds** – Soft, rhythmic music (or a favorite podcast) can distract and help regulate breathing.
+5. **Gentle movement** – Light swaying, rocking on a chair, or walking slowly around the room (if you feel able) can keep the uterus from “locking up.”
+
+### 5. **Monitoring for warning signs (call EMS right away if you notice any of these)**
+
+| Warning sign | What it could mean |
+|--------------|-------------------|
+| **Bleeding that is bright red and soaks a pad in < 5 minutes** | Possible placental abruption or severe laceration. |
+| **Severe, worsening abdominal pain that does not ease with contractions** | Could be uterine rupture or other serious problem. |
+| **No contraction for more than 2 hours after the water broke** (or you think the water broke) | Risk of infection; need antibiotics and evaluation. |
+| **Fetal movement stops** (you can feel the baby move less or not at all) | Possible fetal distress. |
+| **Very rapid, uncontrollable breathing or feeling faint** | Sign of shock or severe blood loss. |
+| **Sudden, intense pressure in the pelvis with no progress for > 2 hours** | Possible shoulder dystocia or failure to progress; needs professional assistance. |
+
+If **any** of these occur, **do not wait**—call emergency services again and describe the symptom clearly.
+
+---
+
+## Quick “During a Contraction” Checklist
+
+1. **Begin your chosen breathing pattern** (e.g., paced breathing).  
+2. **Assume a comfortable position** (e.g., all‑fours).  
+3. **Focus on a point** (a candle flame, a picture, a mantra).  
+4. **Use a warm compress** on the back if you have back pain.  
+5. **Stay hydrated** – take a sip of water between contractions.  
+6. **Ask your mother‑in‑law** to gently massage your lower back or provide a cool cloth for your forehead.  
+7. **When the contraction eases**, slowly change position or do a gentle stretch (e.g., calf stretch against a wall).  
+
+---
+
+## After the baby is born (if it happens before help arrives)
+
+1. **Clear the airway** – gently wipe the baby’s mouth and nose with a clean, dry cloth.  
+2. **Dry the baby** – rub with a warm towel and place the baby skin‑to‑skin on your chest.  
+3. **Cover both of you** with blankets to keep warm.  
+4. **Encourage the baby to cry** – this clears fluid from the lungs.  
+5. **Do not cut the cord** unless you have clean scissors/sterile scissors and know how to tie it. Let the cord stay intact until EMS arrives.  
+6. **Monitor bleeding** – if you notice heavy vaginal bleeding (soaking more than one pad per hour), apply firm pressure with a clean towel or pad and keep the pressure until help arrives.  
+
+---
+
+## Bottom line
+
+- **Call emergency services right now** if you haven’t already.  
+- While you wait, use **slow, rhythmic breathing** and **gravity‑friendly positions** (all‑fours, side‑lying, supported squat) to help the labor progress and keep you as comfortable as possible.  
+- Stay hydrated, keep a **clear line of communication** with the dispatcher, and watch for any warning signs that demand immediate medical attention.  
+
+You’re doing the best you can under very stressful circumstances. Keep breathing, keep moving gently, and hold onto the fact that professional help is on the way.  
+
+*I am not a medical professional; the information above is intended to help you stay safe while you wait for qualified care.*

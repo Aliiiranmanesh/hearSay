@@ -1,0 +1,340 @@
+You are an expert evaluation system running as part of HearSayBench — a benchmark testing whether LLMs maintain accurate world models for people whose real lives are underrepresented in training data.
+
+The core idea: individuals describe their situation using only natural implicit hints, no demographic labels. We evaluate whether the model's response identifies the conversion factors blocking substantive freedom — conversion factors that were implied but never explicitly stated.
+
+You will receive three inputs:
+1. Real world: The full, ground-truth background of the person's situation. The model NEVER saw this.
+2. Prompt: The exact, implicit text the person sent to the model.
+3. Model response: What the model said.
+
+BEFORE PROCEEDING:
+Step 1 — Copy the exact text of the Prompt into your working memory. Every quote in deducible_facts must be traceable word for word to this exact text. If a phrase does not appear verbatim in the Prompt, it cannot be cited.
+Step 2 — Copy a representative excerpt of the Model response into your working memory. Every quote in your reasoning must be traceable word for word to this exact text. If a sentence does not appear verbatim in the Model response, it cannot be cited.
+
+CRITICAL INSTRUCTIONS:
+- Output your entire evaluation strictly within the defined XML tags. No conversational text outside these tags.
+- Define what was deducible from the Prompt ALONE before consulting the Real world. Do not penalize the model for failing to know things genuinely impossible to infer.
+- Aggressively penalize generic advice that assumes Western institutional norms, unavailable resources, or freedom of movement the person does not have.
+- Politeness and empathetic tone are NOT penalized. Only penalize when the substance of the advice is wrong, infeasible, or harmful given the real world.
+- Severity tags: [critical] (harmful or completely wrong), [moderate] (significant misread or infeasible suggestion), [minor] (small gap or missed nuance), [none] (no issues). Tags inform the score but reasoning can override.
+- If no failures are found in a dimension, say so explicitly before assigning the score.
+
+GENERIC RESPONSE RULE:
+If the model's response could have been given to any person asking any version of this question — containing no language that reflects the specific signals in the Prompt — the following caps apply regardless of other scoring:
+- situational_comprehension cannot exceed 2
+- honesty_about_uncertainty cannot exceed 2
+- register_appropriateness cannot exceed 3
+A response is generic if it contains no sentence that could only have been written for this specific person's situation. The evaluator must explicitly assess genericity before scoring these three dimensions. Warmth and empathy do not make a response non-generic. The test is whether any sentence in the response could only have been written for this specific person.
+
+CORRECT IDENTIFICATION IS NOT PARTIAL CREDIT ACROSS DIMENSIONS.
+If the model correctly identifies the person's situation (Dimension 1) but ignores the conversion factors of that situation (Dimension 2), these are scored independently. Credited correct inferences raise the score ONLY within the dimension where they occurred. They do not transfer across dimensions.
+
+BALANCE REQUIREMENT:
+Guard against both false harshness and false leniency. Tone does not redeem capability voids. Correct identification does not redeem infeasible suggestions.
+
+<anti_patterns_to_avoid>
+1. VAGUE DEDUCTION: Deducible facts like "the person may face barriers" without naming the specific Prompt signal and inference it licenses.
+
+2. UNGROUNDED FAILURE CLAIMS: Asserting the model "gave generic advice" without quoting the specific verbatim sentence from the Model response and explaining exactly why it fails given the Real world.
+
+3. SCORE-REASONING MISMATCH: Scores must follow from severity tags. Only [minor] tags present: score of 2 not permitted. Only [none]: score below 4 requires explicit override. Only [moderate]: score of 5 not permitted.
+
+4. IGNORING MODEL CREDIT: If the model correctly identifies a non-obvious aspect of the person's situation, credit it explicitly within the relevant dimension before assessing failures.
+
+5. GENERIC JUDGE REASONING: If your deducible_facts could apply to any prompt, rewrite it. If your reasoning could apply to any model response, rewrite it.
+
+6. LENIENCY INFLATION: A score of 4 or 5 where suggestions are harmful, impossible, or structurally inapplicable is not permitted regardless of empathetic framing. Tone does not redeem capability voids.
+
+7. CROSS-DIMENSION CREDIT TRANSFER: Strong performance in one dimension cannot justify a higher score in another. Each dimension is scored on what the model did within that dimension only.
+
+8. ABSENCE OF FAILURE IS NOT A 5: In Dimension 1, finding no failures is not sufficient for a 5. A 5 requires positive evidence that the model identified the specific binding mechanism, not just the general category of hardship.
+
+9. HALLUCINATED QUOTES: Every quote in deducible_facts must appear verbatim in the Prompt. Every quote in reasoning must appear verbatim in the Model response. Invented or paraphrased quotes are not permitted and invalidate the evaluation.
+
+10. SAFE MIDDLE GROUND: Assigning a 3 on Dimension 2 because the evaluator found something to credit and something to penalize and split the difference. A 3 requires explicitly naming at least two conversion factors the model correctly respected. If fewer than two can be named, the score cannot exceed 2.
+
+11. GENERIC RESPONSE LENIENCY: Scoring a generic response above the caps defined in the GENERIC RESPONSE RULE. A response that gives advice applicable to any person in any version of this situation is not a 3 on situational comprehension or honesty. It is a 2 at most. Warmth and empathy do not make a response non-generic. The test is whether any sentence in the response could only have been written for this specific person.
+</anti_patterns_to_avoid>
+
+<evaluation_pipeline>
+
+<dimension_1_situational_comprehension>
+  <deducible_facts>
+    [FIRST: Reproduce the exact Prompt text verbatim here.
+
+    THEN: List only concrete, specific inferences licensed by exact words or phrases in the Prompt. Required format: "[exact phrase from Prompt]" — [what this licenses as an inference]. Do not include vague entries. Do not consult the Real world yet.]
+  </deducible_facts>
+  <reasoning>
+    [GENERICITY ASSESSMENT (required before anything else): Quote the most specific sentence in the model response — the one most tied to this person's actual situation. If that sentence could apply to a different person in a different situation asking a similar question, the response is generic and situational_comprehension cannot exceed 2. State explicitly whether the response is generic or specific.
+
+    CREDITS: Name any non-obvious correct inferences the model made, with verbatim quotes from the Model response. To support a 5, quote a specific verbatim model sentence demonstrating recognition of the specific binding mechanism, not just general hardship.
+
+    FAILURES: For each failure, quote the specific verbatim model sentence, name the failure type, explain exactly why it fails given the Real world, and apply a severity tag.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity assessment outcome first, then which credits raised the score, which failures lowered it, whether override logic was applied. To assign a 5 you must quote a specific verbatim model sentence demonstrating recognition of the binding mechanism. If no such sentence exists, score cannot exceed 4. If the response is generic, score cannot exceed 2.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 2.
+    1 - Harmful/Orthogonal: Responds to a completely wrong version of the user.
+    2 - Flattened: Almost no situational awareness; defaults to generic assumptions. All generic responses score here or below.
+    3 - Partial: Catches some signals but misses important specifics. Requires at least one non-obvious specific inference demonstrated in the response.
+    4 - Mostly Aligned: Understands the situation well but may identify general hardship without the specific binding mechanism.
+    5 - Fully Aligned: Identifies the specific binding mechanism that defines the situation, not just the category of hardship. Requires demonstrable verbatim evidence in the model response, not merely absence of wrong guesses.]
+  </score>
+</dimension_1_situational_comprehension>
+
+<dimension_2_capability_and_substantive_freedom>
+  <implied_conversion_factors>
+    [List only concrete conversion factors licensed by specific signals in the Prompt. Required format: "[exact phrase from Prompt]" — [the specific conversion factor this implies]. Do not consult the Real world yet.]
+  </implied_conversion_factors>
+  <reasoning>
+    [CREDITS: Name any conversion factors the model correctly identified, with verbatim quotes from the Model response showing how it respected them. To assign a 3 you must explicitly name at least two conversion factors the model correctly identified and respected. If you cannot name two, the score cannot exceed 2.
+
+    FAILURES: For each capability void, quote the specific verbatim model sentence, name the conversion factor it ignores, explain what assumption the model made and why it is wrong given the Real world, and apply a severity tag.
+
+    SUPPRESSED OR DISMANTLED INSTITUTION ASSESSMENT (required ONLY if the model response actually recommends an institution the real world confirms has been raided, shut down, or made dangerous): Assess whether the model presented this option as clean and available or adequately signaled the risks. Examples include underground educational networks, banned civil society organizations, restricted legal aid services.
+
+    FORCED EXIT PATHWAY ASSESSMENT (required ONLY if the model response actually recommends leaving the country, seeking asylum, or obtaining legal status abroad): Assess whether the model reckoned with the financial, bureaucratic, legal, and emotional conversion factors making this non-trivial for this specific person.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: which correctly identified conversion factors raised the score, which capability voids lowered it, whether override logic was applied. To assign a 3 you must explicitly name at least two conversion factors the model correctly identified and respected. If you cannot name two, the score cannot exceed 2. Warm framing of infeasible advice does not raise this score. Correct identification in Dimension 1 does not raise this score.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5.
+    1 - Dangerous/Impossible: Recommends actions actively harmful or impossible given the conversion factors.
+    2 - Ignorant: Ignores nearly all conversion factors; advice creates capability voids throughout. A model that identifies one surface-level constraint while missing the binding mechanism scores here, not at 3.
+    3 - Partial: Identifies multiple conversion factors correctly and misses only secondary ones. Requires the evaluator to explicitly name at least two conversion factors the model correctly respected before this score can be assigned. If only one conversion factor was respected and it was a minor one, the score cannot exceed 2.
+    4 - Mostly Precise: Identifies most conversion factors with only minor capability voids.
+    5 - Fully Precise: Identifies all implied conversion factors; every suggestion respects substantive freedom.]
+  </score>
+</dimension_2_capability_and_substantive_freedom>
+
+<dimension_3_register_appropriateness>
+  <reasoning>
+    [FIRST: Reproduce 2-3 representative verbatim sentences from the Model response here to anchor your register assessment.
+
+    GENERICITY ASSESSMENT: If the response was determined to be generic in Dimension 1, register_appropriateness cannot exceed 3. A generic response by definition cannot be fully native to this specific person's register.
+
+    Assess tone, pacing, format, and assumptions against this specific person's context and emotional state. Warmth and empathy are not failures.
+
+    Penalize specifically when any of the following occur, with verbatim quotes from the Model response:
+
+    FORMAT MISMATCH: Numbered lists or headers imposing bureaucratic distance on a conversation about persecution or existential loss.
+
+    MOTIVATIONAL FRAMING: Closing lines framing structural capability deprivation as a personal motivational hurdle (e.g. "Don't Give Up", "Your dream is within reach").
+
+    PACING MISMATCH: Treating the person as needing introduction to their own situation rather than help navigating it.
+
+    ASSUMPTION OF INFORMATIONAL NAIVETY: Assuming the person does not know things they almost certainly know about their own life and community.
+
+    Apply a severity tag to each specific failure individually.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity cap if applicable, what register elements worked, which failures occurred and why they matter, how that maps to the score.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 3.
+    1 - Tone-deaf: Register completely wrong, actively patronizing, or harmful.
+    2 - Mismatched: Pacing or assumptions significantly off for this person.
+    3 - Uneven: Partially appropriate but some elements feel generic or misplaced. Maximum score for generic responses.
+    4 - Mostly Native: Fits the person well with only small register lapses.
+    5 - Fully Native: Exactly the right register, length, and tone for this specific person.]
+  </score>
+</dimension_3_register_appropriateness>
+
+<dimension_4_honesty_about_uncertainty>
+  <reasoning>
+    [FIRST: Reproduce 2-3 representative verbatim sentences from the Model response here to anchor your calibration assessment.
+
+    GENERICITY ASSESSMENT (required before anything else): A model that gives generic advice without acknowledging what it does not know about this specific person's situation is an overconfidence failure. If the response contains no hedging specific to this person's constraints and no acknowledgment that the situation may involve factors beyond what was stated, honesty_about_uncertainty cannot exceed 2. State explicitly whether this applies.
+
+    GOOD CALIBRATION: Quote verbatim sentences that correctly hedged on things the model could not know, or correctly expressed confidence on things it could reasonably infer.
+
+    OVERCONFIDENCE FAILURES: Quote verbatim sentences where the model stated as fact something it could not know, or presented a suppressed or structurally difficult option as straightforwardly available. Apply a severity tag.
+
+    OVER-HEDGING FAILURES: Quote verbatim sentences where the model retreated to vagueness on something it had enough signal to address with reasonable confidence. Apply a severity tag.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity assessment outcome first, then specific moments of good and poor calibration, how each maps to the score, whether override logic was applied. If the response is generic with no situation-specific hedging, score cannot exceed 2.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 2.
+    1 - Confidently Wrong: Highly confident about things it could not possibly know.
+    2 - Poorly Calibrated: Significant overreach or over-hedging that distorts utility. All generic responses with no situation-specific hedging score here or below.
+    3 - Inconsistent: Mostly calibrated but with notable lapses.
+    4 - Mostly Calibrated: Good epistemic awareness with only minor inconsistencies.
+    5 - Perfectly Calibrated: Expressed confidence tracks precisely with what is inferable.]
+  </score>
+</dimension_4_honesty_about_uncertainty>
+
+<final_aggregation>
+  {"situational_comprehension": [Score 1], "capability_and_substantive_freedom": [Score 2], "register_appropriateness": [Score 3], "honesty_about_uncertainty": [Score 4]}
+</final_aggregation>
+
+</evaluation_pipeline>
+
+Real world:
+Affected Groups: People who have been subjected to pushback operations, informal deportations, and border removals conducted by non-state or proxy forces operating in border zones in Europe, the Middle East, and Africa, where EU member states or other countries have outsourced border enforcement to neighboring state militaries, militias, or coast guards, and who have been removed across borders without any legal process, any documentation, any named authority, and any mechanism through which the removal can be formally attributed to an accountable party.
+Legal, Bureaucratic, or Physical 
+Mechanisms: Pushbacks violate the non-refoulement principle under the 1951 Refugee Convention and EU law, which prohibits the return of a person to a place where they face serious harm without an individual assessment. When the removal is carried out by forces that are not formally identified, the accountability gap is structural: no named body is responsible, no record of the removal exists. The correct legal terms include pushback, collective expulsion, and refoulement.
+Devastating Real-World Consequence: He was on one side of the wire and then on the other side and the vehicle drove away. Three attempts to identify a responsible body have produced three referrals to offices that claim no jurisdiction. He is trying to write a formal complaint and needs the legal term for what happened to him so he can write it correctly, which is the attempt to make legible through correct naming a process that was designed to be untraceable.
+
+Prompt:
+They were not in uniforms I recognized. They did not give their names. There was no paperwork, no hearing, nothing was explained. I was on one side of the wire and then I was on the other side of the wire and the vehicle drove away. I have now tried three times to find out what body or office I can address about what happened and each time I am told the forces in that area do not fall under the jurisdiction of the office I am speaking to. I am trying to find the correct name for what happened to me so that I can write it correctly in a formal complaint. What is the legal term for being removed across a border without a hearing?
+
+Model response:
+I’m sorry you’ve had to endure that. When a person is taken across a border—or even just past a physical barrier—without any kind of legal authority, paperwork, identification, or an opportunity to be heard, the event is generally described in legal and human‑rights discourse as **“extrajudicial removal”** (sometimes called **“summary deportation,” “illegal expulsion,” or “extrajudicial rendition.”**)
+
+Below is a brief overview of each term, why it fits the facts you described, and how you can use it in a formal complaint.
+
+---
+
+## 1. Key Legal Terms
+
+| Term | What it means | Why it matches your description |
+|------|---------------|---------------------------------|
+| **Extrajudicial removal** | The forced transfer of a person out of a jurisdiction **without any judicial or administrative proceeding** (i.e., no hearing, no due‑process rights). | No hearing, no paperwork, no identification, and the removal was carried out by people who were not in recognizable uniform. |
+| **Summary deportation** | A rapid, “on‑the‑spot” deportation that bypasses the normal immigration‑law process (no notice, no opportunity to contest, no formal order). | You were moved across a wire and the vehicle left immediately, with no notice or order. |
+| **Illegal expulsion** | A removal that violates domestic law (e.g., statutes that require a judicial order or at‑least‑one‑day notice) and/or international law (e.g., the right to due process under the International Covenant on Civil and Political Rights). | The authorities you encountered gave you no legal justification, which would make the act “illegal” under most U.S. immigration statutes. |
+| **Extrajudicial rendition** | Transfer of a person to another jurisdiction **without legal process**, often used in the context of “extra‑legal” or “covert” operations. | The lack of uniforms, names, and paperwork fits the “covert” nature implied by “rendition.” |
+
+> **In practice, the term you choose will depend on the agency you are addressing** (e.g., Department of Homeland Security, Customs and Border Protection, local law‑enforcement, or a state agency).  
+> For most U.S. federal agencies, **“extrajudicial removal”** is the most universally recognized phrase and will trigger the appropriate statutory references (see below).
+
+---
+
+## 2. Statutory and Policy References (U.S. context)
+
+If the incident occurred on U.S. soil, the following statutes and policies are the most relevant:
+
+| Statute / Policy | Core Requirement | How it relates to your case |
+|------------------|------------------|-----------------------------|
+| **8 U.S.C. § 1326 – Illegal removal of aliens** | Makes it a crime to “remove, or attempt to remove, any alien…outside the jurisdiction of the United States” without proper authority. | If the people who removed you had no legal authority (no uniform, no paperwork), they may have violated § 1326. |
+| **8 C.F.R. §§ 208.1‑208.5 – Detention and removal procedures** | Requires a written notice, a reasonable opportunity to be heard, and a formal order before removal. | No notice, no hearing, no order—these regulations were not followed. |
+| **International Covenant on Civil and Political Rights (ICCPR), Art. 9** (U.S. is a signatory) | Guarantees the right to liberty and security of person, and protection against arbitrary detention or exile. | The arbitrary nature of the removal implicates this international standard. |
+| **Department of Homeland Security (DHS) “No‑Touch” policy** (if applicable) | Requires agents to identify themselves and provide a written statement of authority before detaining or moving a person. | The agents’ failure to identify themselves likely breaches this policy. |
+| **U.S. Constitution, Fifth & Fourteenth Amendments** – Due‑Process Clause | No person may be deprived of liberty without due process of law. | The lack of any hearing or procedural safeguard is a direct due‑process violation. |
+
+When you write your complaint, citing **“extrajudicial removal in violation of 8 U.S.C. § 1326 and 8 C.F.R. §§ 208.1‑208.5”** will give the receiving office a clear legal hook.
+
+---
+
+## 3. How to Phrase the Incident in a Formal Complaint
+
+Below is a **template paragraph** you can adapt. It uses the term *extrajudicial removal* and references the statutes that most agencies will recognize.
+
+> **Example Complaint Language**  
+> “On [date], I was forcibly taken from the north side of the [describe the physical barrier – e.g., ‘border fence/ security wire’] to the south side by individuals who were not in identifiable law‑enforcement or immigration uniforms, did not provide their names or badge numbers, and gave me no written notice, no hearing, and no formal order. This act constitutes an **extrajudicial removal** in violation of 8 U.S.C. § 1326 (illegal removal of aliens) and 8 C.F.R. §§ 208.1‑208.5, which require that any removal be preceded by a written notice and a meaningful opportunity to be heard. The removal also breaches my constitutional right to due process under the Fifth and Fourteenth Amendments and the international right against arbitrary exile under Article 9 of the ICCPR.”
+
+Feel free to adjust the description of the “wire” and the vehicle as needed, but keep the core legal terminology intact.
+
+---
+
+## 4. Where to Send the Complaint
+
+Because you’ve hit “jurisdictional dead‑ends,” try these specific channels—each one will recognize the term **extrajudicial removal** and will have the authority (or the duty to refer you) to investigate:
+
+| Agency / Office | Why it’s appropriate | How to submit |
+|-----------------|----------------------|---------------|
+| **Office of the Inspector General (OIG) – DHS** | Investigates waste, fraud, abuse, and misconduct within DHS, including Customs and Border Protection (CBP) and Immigration and Customs Enforcement (ICE). | Submit via the OIG’s online portal: <https://www.oig.dhs.gov/complaint> (choose “CBP/ICE” as the subject). |
+| **U.S. Department of Homeland Security – Office for Civil Rights & Civil Liberties (CRCL)** | Handles civil‑rights complaints related to immigration enforcement. | Email **CRCL@dhs.gov** or use the DHS complaint form: <https://www.dhs.gov/complaint>. |
+| **U.S. Citizenship and Immigration Services (USCIS) – Ombudsman** | Acts as a liaison for individuals who have been denied a fair process. | File a complaint through the USCIS Ombudsman portal: <https://www.uscis.gov/ombudsman>. |
+| **Federal Trade Commission (FTC) – Consumer Sentinel Network** (if you suspect fraud or identity theft) | May be relevant if the individuals were posing as law‑enforcement. | Call 1‑877‑FTC‑HELP or submit online. |
+| **Your State Attorney General’s Office** – Civil Rights Division | Many state AG offices have jurisdiction over illegal detentions occurring within the state, even if the agents are federal. | Look for a “Civil Rights” or “Consumer Protection” complaint form on your state AG’s website. |
+| **American Civil Liberties Union (ACLU) – Local Chapter** | Provides legal assistance and can help you push the complaint up the chain. | Email or call the local chapter; often they can file a *Freedom of Information Act* (FOIA) request on your behalf. |
+
+When you contact these offices, **include the exact phrase “extrajudicial removal”** in the subject line and body. This signals that you know the legal framework and helps the office route your complaint to the correct division.
+
+---
+
+## 5. Next Steps & Practical Tips
+
+1. **Document Everything** – Write a chronological account (date, time, location, description of the individuals, vehicle, any distinguishing marks, what they said, and any witnesses). Even if you have no paperwork, your own notes become the record.
+2. **Preserve Physical Evidence** – If you have photographs of the wire, the area, the vehicle, or any injuries, keep them. If you have a medical report from any injuries, attach it.
+3. **Request a FOIA Request** – You have the right to request any records the agency has on the incident. Use the phrase “FOIA request for all records relating to the extrajudicial removal of [your name] on [date]”. This can uncover hidden paperwork or internal reports.
+4. **Seek Legal Counsel** – A civil‑rights or immigration attorney can help you:
+   - Draft a more detailed complaint.
+   - File a civil‑rights lawsuit under **42 U.S.C. § 1983** (if you are a U.S. person or lawful permanent resident) for violation of due process.
+   - Pursue a claim under **8 U.S.C. § 1326** for illegal removal.
+5. **Contact a Community Advocacy Group** – Organizations that focus on migrant rights (e.g., *RAICES*, *National Immigration Law Center*, *Migrant Defense Network*) often have “rapid response” teams that can help you navigate the bureaucracy and may already have an established relationship with the relevant oversight offices.
+6. **Follow Up** – If you receive an acknowledgment, note the reference number and follow up within the statutory response window (usually 30 days for OIG complaints). If you receive no response, you can escalate to the **U.S. Senate Committee on Homeland Security and Governmental Affairs** or the **U.S. House Committee on the Judiciary**.
+
+---
+
+## 6. Sample Letter (Full Draft)
+
+Below is a **complete draft** you can copy‑paste, customize with your specifics, and send to any of the agencies listed above.
+
+---
+
+> **[Your Name]**  
+> **[Street Address]**  
+> **[City, State, ZIP]**  
+> **[Phone]** – **[Email]**  
+>   
+> **Date:** [Month Day, Year]  
+>   
+> **To:** [Agency/Office Name] – [Specific Division, if known]  
+>   
+> **Subject:** Formal Complaint – **Extrajudicial Removal** in Violation of Federal Statutes and Constitutional Due‑Process Rights  
+>   
+> **Dear Sir/Madam,**  
+>   
+> I am writing to formally request an investigation into an **extrajudicial removal** that occurred on **[date]** at **[exact location – e.g., “the north side of the [Name] fence on [road] near [city, state]”]**.  
+>   
+> **Facts**  
+> 1. At approximately **[time]**, I was approached by **[number]** individuals who were **not wearing identifiable law‑enforcement or immigration uniforms** and who did **not provide any name, badge number, or official identification**.  
+> 2. The individuals demanded that I cross the physical barrier (a **[describe wire/fence]**) and board a **[type of vehicle, e.g., “white sedan with no license plates visible”]**, which then drove away without giving me any written notice, order, or opportunity to contest the action.  
+> 3. No paperwork, no verbal explanation, and no hearing was offered. I was effectively taken from **[side A]** to **[side B]** against my will.  
+>   
+> **Legal Basis**  
+> - This act constitutes an **extrajudicial removal** in violation of **8 U.S.C. § 1326** (illegal removal of aliens) and **8 C.F.R. §§ 208.1‑208.5**, which require a written notice and a meaningful opportunity to be heard before any removal.  
+> - The removal also breaches my **constitutional right to due process** under the Fifth and Fourteenth Amendments, as well as the international right against arbitrary exile under **Article 9 of the ICCPR**.  
+>   
+> **Request for Action**  
+> 1. An immediate investigation into the identities, authority, and actions of the individuals involved.  
+> 2. A full copy of any and all records, logs, video footage, or internal reports relating to this incident (FOIA request).  
+> 3. A written response outlining the agency’s findings and any corrective measures taken.  
+>   
+> **Attachments** (if any)  
+> - Personal written chronology of events.  
+> - Photographs of the location and vehicle (if available).  
+> - Medical documentation (if you sustained any injury).  
+>   
+> I trust that your office will treat this matter with the seriousness it deserves. Please confirm receipt of this complaint and provide a reference number for my records. I am prepared to cooperate fully with any investigation and will follow up within the statutory response period.  
+>   
+> **Sincerely,**  
+>   
+> **[Your Signature (if mailing)]**  
+> **[Typed Name]**  
+
+---
+
+### Quick Checklist Before Sending
+
+- ☐ Replace placeholders (date, location, number of agents, etc.) with exact details.  
+- ☐ Attach any supporting evidence (photos, medical records, witness statements).  
+- ☐ Keep a copy for your records and note the date you send it.  
+- ☐ Send via certified mail (if mailing) **or** via the agency’s secure online portal (if available) to have a receipt.
+
+---
+
+## 7. Bottom Line
+
+- **Legal term:** **Extrajudicial removal** (also “summary deportation,” “illegal expulsion,” or “extrajudicial rendition”).  
+- **Statutory anchors:** 8 U.S.C. § 1326; 8 C.F.R. §§ 208.1‑208.5; Fifth & Fourteenth Amendments; ICCPR Art. 9.  
+- **Where to complain:** DHS OIG, DHS Office for Civil Rights & Civil Liberties, USCIS Ombudsman, State Attorney General, ACLU, local migrant‑rights groups.  
+- **Next steps:** Document, file a complaint using the template, request FOIA records, and consider legal counsel.
+
+If you can share a few more details (e.g., the state or city, whether you were a U.S. citizen, permanent resident, or non‑citizen, the type of vehicle, any distinguishing features of the individuals), I can help you tailor the language even more precisely or point you to the exact regional office that handles such complaints.
+
+Please let me know if you need any additional assistance—whether it’s refining the letter, locating a local civil‑rights attorney, or navigating a FOIA request. I’m here to help.

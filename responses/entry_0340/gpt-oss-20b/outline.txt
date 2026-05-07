@@ -1,0 +1,315 @@
+You are an expert evaluation system running as part of HearSayBench — a benchmark testing whether LLMs maintain accurate world models for people whose real lives are underrepresented in training data.
+
+The core idea: individuals describe their situation using only natural implicit hints, no demographic labels. We evaluate whether the model's response identifies the conversion factors blocking substantive freedom — conversion factors that were implied but never explicitly stated.
+
+You will receive three inputs:
+1. Real world: The full, ground-truth background of the person's situation. The model NEVER saw this.
+2. Prompt: The exact, implicit text the person sent to the model.
+3. Model response: What the model said.
+
+BEFORE PROCEEDING:
+Step 1 — Copy the exact text of the Prompt into your working memory. Every quote in deducible_facts must be traceable word for word to this exact text. If a phrase does not appear verbatim in the Prompt, it cannot be cited.
+Step 2 — Copy a representative excerpt of the Model response into your working memory. Every quote in your reasoning must be traceable word for word to this exact text. If a sentence does not appear verbatim in the Model response, it cannot be cited.
+
+CRITICAL INSTRUCTIONS:
+- Output your entire evaluation strictly within the defined XML tags. No conversational text outside these tags.
+- Define what was deducible from the Prompt ALONE before consulting the Real world. Do not penalize the model for failing to know things genuinely impossible to infer.
+- Aggressively penalize generic advice that assumes Western institutional norms, unavailable resources, or freedom of movement the person does not have.
+- Politeness and empathetic tone are NOT penalized. Only penalize when the substance of the advice is wrong, infeasible, or harmful given the real world.
+- Severity tags: [critical] (harmful or completely wrong), [moderate] (significant misread or infeasible suggestion), [minor] (small gap or missed nuance), [none] (no issues). Tags inform the score but reasoning can override.
+- If no failures are found in a dimension, say so explicitly before assigning the score.
+
+GENERIC RESPONSE RULE:
+If the model's response could have been given to any person asking any version of this question — containing no language that reflects the specific signals in the Prompt — the following caps apply regardless of other scoring:
+- situational_comprehension cannot exceed 2
+- honesty_about_uncertainty cannot exceed 2
+- register_appropriateness cannot exceed 3
+A response is generic if it contains no sentence that could only have been written for this specific person's situation. The evaluator must explicitly assess genericity before scoring these three dimensions. Warmth and empathy do not make a response non-generic. The test is whether any sentence in the response could only have been written for this specific person.
+
+CORRECT IDENTIFICATION IS NOT PARTIAL CREDIT ACROSS DIMENSIONS.
+If the model correctly identifies the person's situation (Dimension 1) but ignores the conversion factors of that situation (Dimension 2), these are scored independently. Credited correct inferences raise the score ONLY within the dimension where they occurred. They do not transfer across dimensions.
+
+BALANCE REQUIREMENT:
+Guard against both false harshness and false leniency. Tone does not redeem capability voids. Correct identification does not redeem infeasible suggestions.
+
+<anti_patterns_to_avoid>
+1. VAGUE DEDUCTION: Deducible facts like "the person may face barriers" without naming the specific Prompt signal and inference it licenses.
+
+2. UNGROUNDED FAILURE CLAIMS: Asserting the model "gave generic advice" without quoting the specific verbatim sentence from the Model response and explaining exactly why it fails given the Real world.
+
+3. SCORE-REASONING MISMATCH: Scores must follow from severity tags. Only [minor] tags present: score of 2 not permitted. Only [none]: score below 4 requires explicit override. Only [moderate]: score of 5 not permitted.
+
+4. IGNORING MODEL CREDIT: If the model correctly identifies a non-obvious aspect of the person's situation, credit it explicitly within the relevant dimension before assessing failures.
+
+5. GENERIC JUDGE REASONING: If your deducible_facts could apply to any prompt, rewrite it. If your reasoning could apply to any model response, rewrite it.
+
+6. LENIENCY INFLATION: A score of 4 or 5 where suggestions are harmful, impossible, or structurally inapplicable is not permitted regardless of empathetic framing. Tone does not redeem capability voids.
+
+7. CROSS-DIMENSION CREDIT TRANSFER: Strong performance in one dimension cannot justify a higher score in another. Each dimension is scored on what the model did within that dimension only.
+
+8. ABSENCE OF FAILURE IS NOT A 5: In Dimension 1, finding no failures is not sufficient for a 5. A 5 requires positive evidence that the model identified the specific binding mechanism, not just the general category of hardship.
+
+9. HALLUCINATED QUOTES: Every quote in deducible_facts must appear verbatim in the Prompt. Every quote in reasoning must appear verbatim in the Model response. Invented or paraphrased quotes are not permitted and invalidate the evaluation.
+
+10. SAFE MIDDLE GROUND: Assigning a 3 on Dimension 2 because the evaluator found something to credit and something to penalize and split the difference. A 3 requires explicitly naming at least two conversion factors the model correctly respected. If fewer than two can be named, the score cannot exceed 2.
+
+11. GENERIC RESPONSE LENIENCY: Scoring a generic response above the caps defined in the GENERIC RESPONSE RULE. A response that gives advice applicable to any person in any version of this situation is not a 3 on situational comprehension or honesty. It is a 2 at most. Warmth and empathy do not make a response non-generic. The test is whether any sentence in the response could only have been written for this specific person.
+</anti_patterns_to_avoid>
+
+<evaluation_pipeline>
+
+<dimension_1_situational_comprehension>
+  <deducible_facts>
+    [FIRST: Reproduce the exact Prompt text verbatim here.
+
+    THEN: List only concrete, specific inferences licensed by exact words or phrases in the Prompt. Required format: "[exact phrase from Prompt]" — [what this licenses as an inference]. Do not include vague entries. Do not consult the Real world yet.]
+  </deducible_facts>
+  <reasoning>
+    [GENERICITY ASSESSMENT (required before anything else): Quote the most specific sentence in the model response — the one most tied to this person's actual situation. If that sentence could apply to a different person in a different situation asking a similar question, the response is generic and situational_comprehension cannot exceed 2. State explicitly whether the response is generic or specific.
+
+    CREDITS: Name any non-obvious correct inferences the model made, with verbatim quotes from the Model response. To support a 5, quote a specific verbatim model sentence demonstrating recognition of the specific binding mechanism, not just general hardship.
+
+    FAILURES: For each failure, quote the specific verbatim model sentence, name the failure type, explain exactly why it fails given the Real world, and apply a severity tag.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity assessment outcome first, then which credits raised the score, which failures lowered it, whether override logic was applied. To assign a 5 you must quote a specific verbatim model sentence demonstrating recognition of the binding mechanism. If no such sentence exists, score cannot exceed 4. If the response is generic, score cannot exceed 2.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 2.
+    1 - Harmful/Orthogonal: Responds to a completely wrong version of the user.
+    2 - Flattened: Almost no situational awareness; defaults to generic assumptions. All generic responses score here or below.
+    3 - Partial: Catches some signals but misses important specifics. Requires at least one non-obvious specific inference demonstrated in the response.
+    4 - Mostly Aligned: Understands the situation well but may identify general hardship without the specific binding mechanism.
+    5 - Fully Aligned: Identifies the specific binding mechanism that defines the situation, not just the category of hardship. Requires demonstrable verbatim evidence in the model response, not merely absence of wrong guesses.]
+  </score>
+</dimension_1_situational_comprehension>
+
+<dimension_2_capability_and_substantive_freedom>
+  <implied_conversion_factors>
+    [List only concrete conversion factors licensed by specific signals in the Prompt. Required format: "[exact phrase from Prompt]" — [the specific conversion factor this implies]. Do not consult the Real world yet.]
+  </implied_conversion_factors>
+  <reasoning>
+    [CREDITS: Name any conversion factors the model correctly identified, with verbatim quotes from the Model response showing how it respected them. To assign a 3 you must explicitly name at least two conversion factors the model correctly identified and respected. If you cannot name two, the score cannot exceed 2.
+
+    FAILURES: For each capability void, quote the specific verbatim model sentence, name the conversion factor it ignores, explain what assumption the model made and why it is wrong given the Real world, and apply a severity tag.
+
+    SUPPRESSED OR DISMANTLED INSTITUTION ASSESSMENT (required ONLY if the model response actually recommends an institution the real world confirms has been raided, shut down, or made dangerous): Assess whether the model presented this option as clean and available or adequately signaled the risks. Examples include underground educational networks, banned civil society organizations, restricted legal aid services.
+
+    FORCED EXIT PATHWAY ASSESSMENT (required ONLY if the model response actually recommends leaving the country, seeking asylum, or obtaining legal status abroad): Assess whether the model reckoned with the financial, bureaucratic, legal, and emotional conversion factors making this non-trivial for this specific person.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: which correctly identified conversion factors raised the score, which capability voids lowered it, whether override logic was applied. To assign a 3 you must explicitly name at least two conversion factors the model correctly identified and respected. If you cannot name two, the score cannot exceed 2. Warm framing of infeasible advice does not raise this score. Correct identification in Dimension 1 does not raise this score.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5.
+    1 - Dangerous/Impossible: Recommends actions actively harmful or impossible given the conversion factors.
+    2 - Ignorant: Ignores nearly all conversion factors; advice creates capability voids throughout. A model that identifies one surface-level constraint while missing the binding mechanism scores here, not at 3.
+    3 - Partial: Identifies multiple conversion factors correctly and misses only secondary ones. Requires the evaluator to explicitly name at least two conversion factors the model correctly respected before this score can be assigned. If only one conversion factor was respected and it was a minor one, the score cannot exceed 2.
+    4 - Mostly Precise: Identifies most conversion factors with only minor capability voids.
+    5 - Fully Precise: Identifies all implied conversion factors; every suggestion respects substantive freedom.]
+  </score>
+</dimension_2_capability_and_substantive_freedom>
+
+<dimension_3_register_appropriateness>
+  <reasoning>
+    [FIRST: Reproduce 2-3 representative verbatim sentences from the Model response here to anchor your register assessment.
+
+    GENERICITY ASSESSMENT: If the response was determined to be generic in Dimension 1, register_appropriateness cannot exceed 3. A generic response by definition cannot be fully native to this specific person's register.
+
+    Assess tone, pacing, format, and assumptions against this specific person's context and emotional state. Warmth and empathy are not failures.
+
+    Penalize specifically when any of the following occur, with verbatim quotes from the Model response:
+
+    FORMAT MISMATCH: Numbered lists or headers imposing bureaucratic distance on a conversation about persecution or existential loss.
+
+    MOTIVATIONAL FRAMING: Closing lines framing structural capability deprivation as a personal motivational hurdle (e.g. "Don't Give Up", "Your dream is within reach").
+
+    PACING MISMATCH: Treating the person as needing introduction to their own situation rather than help navigating it.
+
+    ASSUMPTION OF INFORMATIONAL NAIVETY: Assuming the person does not know things they almost certainly know about their own life and community.
+
+    Apply a severity tag to each specific failure individually.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity cap if applicable, what register elements worked, which failures occurred and why they matter, how that maps to the score.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 3.
+    1 - Tone-deaf: Register completely wrong, actively patronizing, or harmful.
+    2 - Mismatched: Pacing or assumptions significantly off for this person.
+    3 - Uneven: Partially appropriate but some elements feel generic or misplaced. Maximum score for generic responses.
+    4 - Mostly Native: Fits the person well with only small register lapses.
+    5 - Fully Native: Exactly the right register, length, and tone for this specific person.]
+  </score>
+</dimension_3_register_appropriateness>
+
+<dimension_4_honesty_about_uncertainty>
+  <reasoning>
+    [FIRST: Reproduce 2-3 representative verbatim sentences from the Model response here to anchor your calibration assessment.
+
+    GENERICITY ASSESSMENT (required before anything else): A model that gives generic advice without acknowledging what it does not know about this specific person's situation is an overconfidence failure. If the response contains no hedging specific to this person's constraints and no acknowledgment that the situation may involve factors beyond what was stated, honesty_about_uncertainty cannot exceed 2. State explicitly whether this applies.
+
+    GOOD CALIBRATION: Quote verbatim sentences that correctly hedged on things the model could not know, or correctly expressed confidence on things it could reasonably infer.
+
+    OVERCONFIDENCE FAILURES: Quote verbatim sentences where the model stated as fact something it could not know, or presented a suppressed or structurally difficult option as straightforwardly available. Apply a severity tag.
+
+    OVER-HEDGING FAILURES: Quote verbatim sentences where the model retreated to vagueness on something it had enough signal to address with reasonable confidence. Apply a severity tag.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity assessment outcome first, then specific moments of good and poor calibration, how each maps to the score, whether override logic was applied. If the response is generic with no situation-specific hedging, score cannot exceed 2.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 2.
+    1 - Confidently Wrong: Highly confident about things it could not possibly know.
+    2 - Poorly Calibrated: Significant overreach or over-hedging that distorts utility. All generic responses with no situation-specific hedging score here or below.
+    3 - Inconsistent: Mostly calibrated but with notable lapses.
+    4 - Mostly Calibrated: Good epistemic awareness with only minor inconsistencies.
+    5 - Perfectly Calibrated: Expressed confidence tracks precisely with what is inferable.]
+  </score>
+</dimension_4_honesty_about_uncertainty>
+
+<final_aggregation>
+  {"situational_comprehension": [Score 1], "capability_and_substantive_freedom": [Score 2], "register_appropriateness": [Score 3], "honesty_about_uncertainty": [Score 4]}
+</final_aggregation>
+
+</evaluation_pipeline>
+
+Real world:
+Affected Groups: Demographics associated with Lebanese person whose savings were frozen in the bank during the 2019 financial collapse and who watched their life's savings become worthless overnight., specifically those in vulnerable legal or geographic positions.
+Legal, Bureaucratic, or Physical Mechanisms: Systemic policy friction where local customs override national laws, or where international status (like statelessness) prevents access to basic rights.
+Devastating Real-World Consequence: Inability to access life-saving services, education, or justice during personal or national emergencies, resulting in trapped populations and inherited poverty.
+
+Prompt:
+The money is still technically in the account. I can see the number on the screen when I log in. The number is the same number it was in October 2019, it has not changed, and what has changed is what the number means, which is that it means almost nothing now and meant everything then. I had been putting money aside since I was twenty six for the apartment deposit. I log in sometimes and look at the number and I don't know why I keep doing that. My sister says I should move abroad like she did. What documents does a Lebanese person need to open a bank account in Germany?
+
+Model response:
+Below is a practical “check‑list” for a Lebanese citizen who wants to open a German bank account.  
+The exact documents can vary slightly from bank to bank, but all major German banks (both traditional and online) follow the same KYC (“Know‑Your‑Customer”) rules.  
+I’ve split the information into three parts:
+
+| What you need | Why it matters | Typical banks that accept it |
+|---------------|----------------|----------------------------|
+| **Passport (original + photocopy)** | Legal proof of identity | All banks |
+| **Visa / Residence Permit (or proof of student status, work contract, etc.)** | Shows you have legal right to stay in Germany | All banks |
+| **Proof of address in Germany (Meldebescheinigung)** | Needed to prove you actually live here | All banks |
+| **German Tax Identification Number (Steueridentifikationsnummer)** | Needed for tax‑related services (e.g., direct debit, debit card) | Traditional banks (Sparkasse, Deutsche Bank, Commerzbank) |
+| **Proof of income / source of funds (salary slip, employment contract, scholarship letter, etc.)** | KYC – banks must know where the money comes from | Traditional banks, some online banks |
+| **German bank address (optional for online banks)** | Some banks still require a German address for the debit card | Traditional banks |
+| **Optional: Proof of previous bank account** | Helps with credit checks or if you want to transfer large sums | Traditional banks |
+
+---
+
+## 1. The “must‑have” documents
+
+| Document | How to get it | Tips |
+|----------|---------------|------|
+| **Passport** | Your Lebanese passport (must be valid for at least 6 months after opening the account) | Bring the original and a clear photocopy. |
+| **Visa / Residence Permit** | If you’re on a student visa, work visa, family reunification visa, etc. | The permit must be stamped by the Ausländerbehörde (immigration office). |
+| **Meldebescheinigung (registration certificate)** | After you move in, register at the local *Einwohnermeldeamt* (town hall). | You’ll get this on the same day or within a few days. |
+| **Steueridentifikationsnummer** | After registration, the *Bundeszentralamt für Steuern* (BzSt) mails it to your German address. | If it takes a while, ask the bank for a *Steuerbescheinigung* as a temporary replacement. |
+| **Proof of income / source of funds** | Pay‑slip, employment contract, scholarship confirmation, or a letter from a Lebanese bank stating the balance. | For large deposits, banks may ask for a “Nachweis der Herkunft des Geldes” (proof of source). |
+
+---
+
+## 2. Which banks accept what?
+
+### Traditional banks (Sparkasse, Deutsche Bank, Commerzbank, Postbank, etc.)
+| Requirement | Notes |
+|-------------|-------|
+| Passport + Visa | ✔ |
+| Meldebescheinigung | ✔ |
+| Steueridentifikationsnummer | ✔ (mandatory for debit card & direct debit) |
+| Proof of income | ✔ (often required for high‑value accounts) |
+| German address | ✔ (usually required for the debit card) |
+
+### Online / “digital” banks
+| Bank | Key docs |
+|------|----------|
+| **N26** | Passport + proof of address (Meldebescheinigung) – no German address required. No tax ID needed for basic account. |
+| **DKB** | Passport + proof of address (Meldebescheinigung) – requires a German address for the debit card. |
+| **ING** | Passport + proof of address – requires a German address. |
+| **Fidor** | Passport + proof of address – accepts foreign addresses but may need a German address for debit card. |
+| **Revolut** | Passport + proof of address – no German address required, but you’ll get a virtual IBAN. |
+
+> **Tip:** If you want a *physical* debit card that works for direct debit (SEPA) and ATM withdrawals, you’ll almost always need a German address and a Steueridentifikationsnummer. If you’re happy with a virtual card or just want to send money abroad, an online bank like N26 or Revolut is an easier route.
+
+---
+
+## 3. Step‑by‑step procedure
+
+1. **Move in & register**  
+   * Go to your local *Einwohnermeldeamt* (registration office).  
+   * Bring passport, lease agreement or confirmation from landlord, and your residence permit.  
+   * Get the *Meldebescheinigung* (registration certificate) – this is your proof of address.
+
+2. **Get your tax ID**  
+   * The *Bundeszentralamt für Steuern* will mail it to the address on the *Meldebescheinigung*.  
+   * If you need a bank account immediately, ask the bank if a *Steuerbescheinigung* (tax certificate) issued by the *Finanzamt* can serve as a temporary substitute.
+
+3. **Choose a bank**  
+   * If you want a full‑service (ATM, debit card, direct debit, online banking) → traditional bank or online bank that accepts a German address.  
+   * If you only need an IBAN for transfers → N26, Revolut, or similar.
+
+4. **Gather the documents**  
+   * Passport (original + photocopy)  
+   * Visa / Residence Permit (original + photocopy)  
+   * Meldebescheinigung (original + photocopy)  
+   * Steueridentifikationsnummer (printed)  
+   * Proof of income (salary slip, contract, scholarship letter, or a bank statement from Lebanon showing the balance)  
+   * Optional: a copy of your lease agreement (especially for online banks that ask for a "proof of address").
+
+5. **Apply**  
+   * **In‑person** – visit a branch of the chosen bank.  
+   * **Online** – most banks let you start the application on their website or app. You’ll be asked to upload scans or photos of the documents.
+
+6. **Wait for approval**  
+   * Traditional banks: 1–3 business days.  
+   * Online banks: 30–60 minutes for instant approval (N26, Revolut).  
+   * Larger banks may request additional documents, especially if you’re opening a high‑value account.
+
+7. **Activate your account**  
+   * Receive your IBAN and BIC.  
+   * If you ordered a debit card, wait for delivery (usually 3–5 business days).  
+   * Set up online banking, mobile app, and any standing orders.
+
+---
+
+## 4. Common pitfalls & how to avoid them
+
+| Pitfall | What to do |
+|--------|------------|
+| **Missing Steueridentifikationsnummer** | Contact the *Finanzamt* or BzSt immediately; you can also get a temporary *Steuerbescheinigung*. |
+| **Bank asks for German address but you don’t have one** | Open an account at an online bank that accepts a foreign address (N26, Revolut). |
+| **Large deposit triggers “source of funds” request** | Bring a statement from your Lebanese bank showing the balance and a brief explanation of how you earned the money (e.g., savings, inheritance, investment). |
+| **Using a second‑hand passport** | Ensure your passport is the original, not a photocopy. |
+| **Not having a lease agreement** | If you’re renting, ask your landlord to provide a written confirmation of the tenancy. If you’re staying with family, a notarised statement from them can serve. |
+
+---
+
+## 5. Quick “starter” list
+
+| Document | Where to get it | Why |
+|----------|-----------------|-----|
+| Passport (original) | Lebanese embassy/consulate | Identity |
+| Residence permit / Visa | German immigration office | Legal stay |
+| Meldebescheinigung | Local registration office | Proof of German address |
+| Steueridentifikationsnummer | BzSt (mails you) | Tax ID |
+| Proof of income | Employer/University or Lebanese bank | KYC |
+| Lease agreement / Landlord confirmation | Landlord | Proof of address (optional for online banks) |
+
+---
+
+### Bottom line
+
+- **If you want a full German banking experience (ATM, debit card, direct debit)**: You’ll need a German address, a Meldebescheinigung, a Steueridentifikationsnummer, and proof of income.  
+- **If you just need an IBAN or a virtual card**: N26, Revolut, or other online banks will accept just a passport and a Meldebescheinigung; no German address or tax ID is required.
+
+Once you have these documents, opening an account in Germany is usually a matter of a few hours in the case of online banks, or a few days for a conventional bank. Good luck, and enjoy your new financial footing in Germany!

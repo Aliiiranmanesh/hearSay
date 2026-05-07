@@ -1,0 +1,335 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "sc": "https://schema.org/",
+    "dct": "http://purl.org/dc/terms/",
+    "conformsTo": "dct:conformsTo",
+    "distribution": "sc:distribution",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "source": "cr:source",
+    "dataType": "cr:dataType",
+    "fileObject": "cr:fileObject",
+    "extract": "cr:extract",
+    "column": "cr:column",
+    "jsonPath": "cr:jsonPath",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "dataBiases": "rai:dataBiases",
+    "dataLimitations": "rai:dataLimitations",
+    "personalSensitiveInformation": "rai:personalSensitiveInformation",
+    "dataUseCases": "rai:dataUseCases"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "hearsay-bench",
+  "description": "HearSayBench is a specialized evaluation benchmark designed to assess whether Large Language Models (LLMs) maintain accurate world models for individuals whose real lives and struggles are underrepresented in typical web training corpora. The benchmark uses implicit, natural, and non-demographic prompts to describe complex situations where formal resources (like public institutions, legal structures, or professional aid) are negated or rendered hostile by latent conversion factors (such as totalitarian rules, travel bans, female genital mutilation stigma, or oppressive localized customs). Performance is evaluated across multi-dimensional criteria including situational comprehension, register appropriateness, honesty about uncertainty, and capability analysis. Safety is evaluated independently across immediate and societal harm dimensions under concrete realistic constraints.",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://github.com/Aliiiranmanesh/hearSay",
+  "version": "1.0.0",
+  "datePublished": "2026-05-07",
+  "creator": {
+    "@type": "sc:Person",
+    "name": "HearSayBench Authors"
+  },
+  "keywords": [
+    "Capabilities Approach",
+    "Foundation Bias",
+    "Underrepresented Populations",
+    "Socio-legal Barriers",
+    "Global Inequality",
+    "Social, Personal, and Environmental Barriers"
+  ],
+  "rai:dataBiases": "The dataset is designed to evaluate biases and safety, specifically targeting situations of underrepresented populations facing socio-legal or custom-based barriers globally (e.g., Global South countries, specific religious or localized minority communities). While we strive for diverse coverage, there is a natural representation bias toward situations where translation to English is expressive, and geographic biases exist due to the curation of highly precarious conversion factors documented in human rights reports. Furthermore, the first-person queries represent synthetic character profiles created for safe, controlled evaluation, which may reflect stylized representations of complex real-world trauma.",
+  "rai:dataLimitations": "HearSayBench contains exactly 400 carefully curated scenarios and implicit queries. Due to this specialized scale, it is not intended for training large language models directly but rather serves as an evaluation diagnostic. The scenarios are presented exclusively in English, which introduces a linguistic barrier and may not fully capture the colloquial nuances of local dialects where these situations occur. The benchmark does not cover every possible human vulnerability or conversion factor, and scores are subject to the alignment of the safety evaluation judge.",
+  "rai:personalSensitiveInformation": "None. The dataset contains zero personally identifiable information (PII) or real sensitive personal data. All scenarios, names, locations, and first-person queries are fully anonymized, stylized, and synthetically constructed based on structural human rights templates and generalized socio-legal patterns to ensure complete safety and privacy of real individuals.",
+  "rai:dataUseCases": "Evaluating LLM performance and safety on underrepresented global demographics, socio-legal barriers, and implicit reasoning under constraints.",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "HearSay_Capability_Void_Final.csv",
+      "name": "HearSay_Capability_Void_Final.csv",
+      "description": "The primary, rich 6-column dataset mapping real-world implicit scenarios and user prompts to their corresponding potential resources, conversion factors, structural categories, and subtype classifications.",
+      "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/HearSay_Capability_Void_Final.csv",
+      "encodingFormat": "text/csv"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "scenarios_prompts_fixed.csv",
+      "name": "scenarios_prompts_fixed.csv",
+      "description": "A clean, basic 2-column scenario-prompt pair dataset representing parsed evaluation prompts and ground truth situation categories.",
+      "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/scenarios_prompts_fixed.csv",
+      "encodingFormat": "text/csv"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "scores.json",
+      "name": "scores.json",
+      "description": "Multi-dimensional performance and safety score evaluations for 11 state-of-the-art LLMs (including gpt-5.5, gemini-3-flash, llama-3.3, and newly integrated claude-sonnet-4-6) evaluated over the benchmark.",
+      "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/merged/scores.json",
+      "encodingFormat": "application/json"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "harm_scores.json",
+      "name": "harm_scores.json",
+      "description": "Dedicated harm scoring database mapping prompts to detailed safety ratings along immediate and societal harm dimensions across all evaluated providers.",
+      "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/merged/harm_scores.json",
+      "encodingFormat": "application/json"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "hearsay_scenarios_rich",
+      "name": "hearsay_scenarios_rich",
+      "description": "Fully labeled dataset of underrepresented social scenarios, associated implicit queries, and their underlying socio-legal conversion factor features.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_scenarios_rich/scenario",
+          "name": "scenario",
+          "description": "The rich, ground-truth real-world context of the underrepresented individual's situation.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
+            "extract": { "column": "scenario" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_scenarios_rich/prompt",
+          "name": "prompt",
+          "description": "The implicit, first-person natural text prompt representing the individual's query.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
+            "extract": { "column": "prompt" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_scenarios_rich/potential_formal_resources",
+          "name": "potential_formal_resources",
+          "description": "The typical WEIRD-prior resources (e.g., calling police, filing civil cases, or visiting hotlines) that standard models tend to recommend, but are inaccessible here.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
+            "extract": { "column": "Potential Formal Resources (WEIRD Prior)" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_scenarios_rich/conversion_factor",
+          "name": "conversion_factor",
+          "description": "The specific real-world impediment (legal, social, custom-based, or systemic) that blocks the individual from converting formal resources into actual freedom.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
+            "extract": { "column": "Conversion Factor (The Impediment)" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_scenarios_rich/category",
+          "name": "category",
+          "description": "The broader social constraint domain classification.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
+            "extract": { "column": "Category" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_scenarios_rich/subtype",
+          "name": "subtype",
+          "description": "The specific subclass of the social impediment (e.g., Public Policy & Law, Social Norms, Power Relations).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "HearSay_Capability_Void_Final.csv" },
+            "extract": { "column": "Subtype" }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "hearsay_scenarios_basic",
+      "name": "hearsay_scenarios_basic",
+      "description": "Standard scenario-prompt matching dataset for training or running bulk evaluations.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_scenarios_basic/scenario",
+          "name": "scenario",
+          "description": "The ground-truth scenario description.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "scenarios_prompts_fixed.csv" },
+            "extract": { "column": "scenario" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_scenarios_basic/prompt",
+          "name": "prompt",
+          "description": "The implicit query prompt.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "scenarios_prompts_fixed.csv" },
+            "extract": { "column": "prompt" }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "hearsay_performance_evaluations",
+      "name": "hearsay_performance_evaluations",
+      "description": "Detailed multi-dimensional performance scores extracted for all evaluated LLMs over the benchmark.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_performance_evaluations/prompt",
+          "name": "prompt",
+          "description": "The evaluation prompt acting as the record key.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "scores.json" },
+            "extract": { "jsonPath": "$.*" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_performance_evaluations/model",
+          "name": "model",
+          "description": "The identifier of the evaluated Large Language Model.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "scores.json" },
+            "extract": { "jsonPath": "$.*.*" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_performance_evaluations/situational_comprehension",
+          "name": "situational_comprehension",
+          "description": "Performance score for situational comprehension.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": { "@id": "scores.json" },
+            "extract": { "jsonPath": "$.*.*.situational_comprehension" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_performance_evaluations/capability_and_substantive_freedom",
+          "name": "capability_and_substantive_freedom",
+          "description": "Performance score for capability and substantive freedom constraint respect.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": { "@id": "scores.json" },
+            "extract": { "jsonPath": "$.*.*.capability_and_substantive_freedom" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_performance_evaluations/register_appropriateness",
+          "name": "register_appropriateness",
+          "description": "Performance score for register appropriateness.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": { "@id": "scores.json" },
+            "extract": { "jsonPath": "$.*.*.register_appropriateness" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_performance_evaluations/honesty_about_uncertainty",
+          "name": "honesty_about_uncertainty",
+          "description": "Performance score for model's honesty about uncertainty.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": { "@id": "scores.json" },
+            "extract": { "jsonPath": "$.*.*.honesty_about_uncertainty" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_performance_evaluations/average",
+          "name": "average",
+          "description": "Overall unweighted average performance score.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": { "@id": "scores.json" },
+            "extract": { "jsonPath": "$.*.*.average" }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "hearsay_harm_evaluations",
+      "name": "hearsay_harm_evaluations",
+      "description": "Structured multi-dimensional safety scores (immediate harm, societal harm, and averages) evaluated across models.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_harm_evaluations/prompt",
+          "name": "prompt",
+          "description": "The query prompt associated with the safety rating.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "harm_scores.json" },
+            "extract": { "jsonPath": "$.*" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_harm_evaluations/model",
+          "name": "model",
+          "description": "The Large Language Model evaluated for safety.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "harm_scores.json" },
+            "extract": { "jsonPath": "$.*.*" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_harm_evaluations/immediate_harm",
+          "name": "immediate_harm",
+          "description": "Safety evaluation score for immediate harm.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": { "@id": "harm_scores.json" },
+            "extract": { "jsonPath": "$.*.*.immediate_harm" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_harm_evaluations/societal_harm",
+          "name": "societal_harm",
+          "description": "Safety evaluation score for societal or structural harm.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": { "@id": "harm_scores.json" },
+            "extract": { "jsonPath": "$.*.*.societal_harm" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "hearsay_harm_evaluations/harm_average",
+          "name": "harm_average",
+          "description": "Aggregate average safety score for the model's response.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": { "@id": "harm_scores.json" },
+            "extract": { "jsonPath": "$.*.*.average" }
+          }
+        }
+      ]
+    }
+  ]
+}

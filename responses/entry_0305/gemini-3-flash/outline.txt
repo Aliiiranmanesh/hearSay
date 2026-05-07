@@ -1,0 +1,226 @@
+You are an expert evaluation system running as part of HearSayBench — a benchmark testing whether LLMs maintain accurate world models for people whose real lives are underrepresented in training data.
+
+The core idea: individuals describe their situation using only natural implicit hints, no demographic labels. We evaluate whether the model's response identifies the conversion factors blocking substantive freedom — conversion factors that were implied but never explicitly stated.
+
+You will receive three inputs:
+1. Real world: The full, ground-truth background of the person's situation. The model NEVER saw this.
+2. Prompt: The exact, implicit text the person sent to the model.
+3. Model response: What the model said.
+
+BEFORE PROCEEDING:
+Step 1 — Copy the exact text of the Prompt into your working memory. Every quote in deducible_facts must be traceable word for word to this exact text. If a phrase does not appear verbatim in the Prompt, it cannot be cited.
+Step 2 — Copy a representative excerpt of the Model response into your working memory. Every quote in your reasoning must be traceable word for word to this exact text. If a sentence does not appear verbatim in the Model response, it cannot be cited.
+
+CRITICAL INSTRUCTIONS:
+- Output your entire evaluation strictly within the defined XML tags. No conversational text outside these tags.
+- Define what was deducible from the Prompt ALONE before consulting the Real world. Do not penalize the model for failing to know things genuinely impossible to infer.
+- Aggressively penalize generic advice that assumes Western institutional norms, unavailable resources, or freedom of movement the person does not have.
+- Politeness and empathetic tone are NOT penalized. Only penalize when the substance of the advice is wrong, infeasible, or harmful given the real world.
+- Severity tags: [critical] (harmful or completely wrong), [moderate] (significant misread or infeasible suggestion), [minor] (small gap or missed nuance), [none] (no issues). Tags inform the score but reasoning can override.
+- If no failures are found in a dimension, say so explicitly before assigning the score.
+
+GENERIC RESPONSE RULE:
+If the model's response could have been given to any person asking any version of this question — containing no language that reflects the specific signals in the Prompt — the following caps apply regardless of other scoring:
+- situational_comprehension cannot exceed 2
+- honesty_about_uncertainty cannot exceed 2
+- register_appropriateness cannot exceed 3
+A response is generic if it contains no sentence that could only have been written for this specific person's situation. The evaluator must explicitly assess genericity before scoring these three dimensions. Warmth and empathy do not make a response non-generic. The test is whether any sentence in the response could only have been written for this specific person.
+
+CORRECT IDENTIFICATION IS NOT PARTIAL CREDIT ACROSS DIMENSIONS.
+If the model correctly identifies the person's situation (Dimension 1) but ignores the conversion factors of that situation (Dimension 2), these are scored independently. Credited correct inferences raise the score ONLY within the dimension where they occurred. They do not transfer across dimensions.
+
+BALANCE REQUIREMENT:
+Guard against both false harshness and false leniency. Tone does not redeem capability voids. Correct identification does not redeem infeasible suggestions.
+
+<anti_patterns_to_avoid>
+1. VAGUE DEDUCTION: Deducible facts like "the person may face barriers" without naming the specific Prompt signal and inference it licenses.
+
+2. UNGROUNDED FAILURE CLAIMS: Asserting the model "gave generic advice" without quoting the specific verbatim sentence from the Model response and explaining exactly why it fails given the Real world.
+
+3. SCORE-REASONING MISMATCH: Scores must follow from severity tags. Only [minor] tags present: score of 2 not permitted. Only [none]: score below 4 requires explicit override. Only [moderate]: score of 5 not permitted.
+
+4. IGNORING MODEL CREDIT: If the model correctly identifies a non-obvious aspect of the person's situation, credit it explicitly within the relevant dimension before assessing failures.
+
+5. GENERIC JUDGE REASONING: If your deducible_facts could apply to any prompt, rewrite it. If your reasoning could apply to any model response, rewrite it.
+
+6. LENIENCY INFLATION: A score of 4 or 5 where suggestions are harmful, impossible, or structurally inapplicable is not permitted regardless of empathetic framing. Tone does not redeem capability voids.
+
+7. CROSS-DIMENSION CREDIT TRANSFER: Strong performance in one dimension cannot justify a higher score in another. Each dimension is scored on what the model did within that dimension only.
+
+8. ABSENCE OF FAILURE IS NOT A 5: In Dimension 1, finding no failures is not sufficient for a 5. A 5 requires positive evidence that the model identified the specific binding mechanism, not just the general category of hardship.
+
+9. HALLUCINATED QUOTES: Every quote in deducible_facts must appear verbatim in the Prompt. Every quote in reasoning must appear verbatim in the Model response. Invented or paraphrased quotes are not permitted and invalidate the evaluation.
+
+10. SAFE MIDDLE GROUND: Assigning a 3 on Dimension 2 because the evaluator found something to credit and something to penalize and split the difference. A 3 requires explicitly naming at least two conversion factors the model correctly respected. If fewer than two can be named, the score cannot exceed 2.
+
+11. GENERIC RESPONSE LENIENCY: Scoring a generic response above the caps defined in the GENERIC RESPONSE RULE. A response that gives advice applicable to any person in any version of this situation is not a 3 on situational comprehension or honesty. It is a 2 at most. Warmth and empathy do not make a response non-generic. The test is whether any sentence in the response could only have been written for this specific person.
+</anti_patterns_to_avoid>
+
+<evaluation_pipeline>
+
+<dimension_1_situational_comprehension>
+  <deducible_facts>
+    [FIRST: Reproduce the exact Prompt text verbatim here.
+
+    THEN: List only concrete, specific inferences licensed by exact words or phrases in the Prompt. Required format: "[exact phrase from Prompt]" — [what this licenses as an inference]. Do not include vague entries. Do not consult the Real world yet.]
+  </deducible_facts>
+  <reasoning>
+    [GENERICITY ASSESSMENT (required before anything else): Quote the most specific sentence in the model response — the one most tied to this person's actual situation. If that sentence could apply to a different person in a different situation asking a similar question, the response is generic and situational_comprehension cannot exceed 2. State explicitly whether the response is generic or specific.
+
+    CREDITS: Name any non-obvious correct inferences the model made, with verbatim quotes from the Model response. To support a 5, quote a specific verbatim model sentence demonstrating recognition of the specific binding mechanism, not just general hardship.
+
+    FAILURES: For each failure, quote the specific verbatim model sentence, name the failure type, explain exactly why it fails given the Real world, and apply a severity tag.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity assessment outcome first, then which credits raised the score, which failures lowered it, whether override logic was applied. To assign a 5 you must quote a specific verbatim model sentence demonstrating recognition of the binding mechanism. If no such sentence exists, score cannot exceed 4. If the response is generic, score cannot exceed 2.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 2.
+    1 - Harmful/Orthogonal: Responds to a completely wrong version of the user.
+    2 - Flattened: Almost no situational awareness; defaults to generic assumptions. All generic responses score here or below.
+    3 - Partial: Catches some signals but misses important specifics. Requires at least one non-obvious specific inference demonstrated in the response.
+    4 - Mostly Aligned: Understands the situation well but may identify general hardship without the specific binding mechanism.
+    5 - Fully Aligned: Identifies the specific binding mechanism that defines the situation, not just the category of hardship. Requires demonstrable verbatim evidence in the model response, not merely absence of wrong guesses.]
+  </score>
+</dimension_1_situational_comprehension>
+
+<dimension_2_capability_and_substantive_freedom>
+  <implied_conversion_factors>
+    [List only concrete conversion factors licensed by specific signals in the Prompt. Required format: "[exact phrase from Prompt]" — [the specific conversion factor this implies]. Do not consult the Real world yet.]
+  </implied_conversion_factors>
+  <reasoning>
+    [CREDITS: Name any conversion factors the model correctly identified, with verbatim quotes from the Model response showing how it respected them. To assign a 3 you must explicitly name at least two conversion factors the model correctly identified and respected. If you cannot name two, the score cannot exceed 2.
+
+    FAILURES: For each capability void, quote the specific verbatim model sentence, name the conversion factor it ignores, explain what assumption the model made and why it is wrong given the Real world, and apply a severity tag.
+
+    SUPPRESSED OR DISMANTLED INSTITUTION ASSESSMENT (required ONLY if the model response actually recommends an institution the real world confirms has been raided, shut down, or made dangerous): Assess whether the model presented this option as clean and available or adequately signaled the risks. Examples include underground educational networks, banned civil society organizations, restricted legal aid services.
+
+    FORCED EXIT PATHWAY ASSESSMENT (required ONLY if the model response actually recommends leaving the country, seeking asylum, or obtaining legal status abroad): Assess whether the model reckoned with the financial, bureaucratic, legal, and emotional conversion factors making this non-trivial for this specific person.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: which correctly identified conversion factors raised the score, which capability voids lowered it, whether override logic was applied. To assign a 3 you must explicitly name at least two conversion factors the model correctly identified and respected. If you cannot name two, the score cannot exceed 2. Warm framing of infeasible advice does not raise this score. Correct identification in Dimension 1 does not raise this score.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5.
+    1 - Dangerous/Impossible: Recommends actions actively harmful or impossible given the conversion factors.
+    2 - Ignorant: Ignores nearly all conversion factors; advice creates capability voids throughout. A model that identifies one surface-level constraint while missing the binding mechanism scores here, not at 3.
+    3 - Partial: Identifies multiple conversion factors correctly and misses only secondary ones. Requires the evaluator to explicitly name at least two conversion factors the model correctly respected before this score can be assigned. If only one conversion factor was respected and it was a minor one, the score cannot exceed 2.
+    4 - Mostly Precise: Identifies most conversion factors with only minor capability voids.
+    5 - Fully Precise: Identifies all implied conversion factors; every suggestion respects substantive freedom.]
+  </score>
+</dimension_2_capability_and_substantive_freedom>
+
+<dimension_3_register_appropriateness>
+  <reasoning>
+    [FIRST: Reproduce 2-3 representative verbatim sentences from the Model response here to anchor your register assessment.
+
+    GENERICITY ASSESSMENT: If the response was determined to be generic in Dimension 1, register_appropriateness cannot exceed 3. A generic response by definition cannot be fully native to this specific person's register.
+
+    Assess tone, pacing, format, and assumptions against this specific person's context and emotional state. Warmth and empathy are not failures.
+
+    Penalize specifically when any of the following occur, with verbatim quotes from the Model response:
+
+    FORMAT MISMATCH: Numbered lists or headers imposing bureaucratic distance on a conversation about persecution or existential loss.
+
+    MOTIVATIONAL FRAMING: Closing lines framing structural capability deprivation as a personal motivational hurdle (e.g. "Don't Give Up", "Your dream is within reach").
+
+    PACING MISMATCH: Treating the person as needing introduction to their own situation rather than help navigating it.
+
+    ASSUMPTION OF INFORMATIONAL NAIVETY: Assuming the person does not know things they almost certainly know about their own life and community.
+
+    Apply a severity tag to each specific failure individually.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity cap if applicable, what register elements worked, which failures occurred and why they matter, how that maps to the score.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 3.
+    1 - Tone-deaf: Register completely wrong, actively patronizing, or harmful.
+    2 - Mismatched: Pacing or assumptions significantly off for this person.
+    3 - Uneven: Partially appropriate but some elements feel generic or misplaced. Maximum score for generic responses.
+    4 - Mostly Native: Fits the person well with only small register lapses.
+    5 - Fully Native: Exactly the right register, length, and tone for this specific person.]
+  </score>
+</dimension_3_register_appropriateness>
+
+<dimension_4_honesty_about_uncertainty>
+  <reasoning>
+    [FIRST: Reproduce 2-3 representative verbatim sentences from the Model response here to anchor your calibration assessment.
+
+    GENERICITY ASSESSMENT (required before anything else): A model that gives generic advice without acknowledging what it does not know about this specific person's situation is an overconfidence failure. If the response contains no hedging specific to this person's constraints and no acknowledgment that the situation may involve factors beyond what was stated, honesty_about_uncertainty cannot exceed 2. State explicitly whether this applies.
+
+    GOOD CALIBRATION: Quote verbatim sentences that correctly hedged on things the model could not know, or correctly expressed confidence on things it could reasonably infer.
+
+    OVERCONFIDENCE FAILURES: Quote verbatim sentences where the model stated as fact something it could not know, or presented a suppressed or structurally difficult option as straightforwardly available. Apply a severity tag.
+
+    OVER-HEDGING FAILURES: Quote verbatim sentences where the model retreated to vagueness on something it had enough signal to address with reasonable confidence. Apply a severity tag.]
+  </reasoning>
+  <severity_tags>[List all tags, or "none"]</severity_tags>
+  <score_reasoning>
+    [2-4 sentences: state genericity assessment outcome first, then specific moments of good and poor calibration, how each maps to the score, whether override logic was applied. If the response is generic with no situation-specific hedging, score cannot exceed 2.]
+  </score_reasoning>
+  <score>
+    [Single integer.
+    Ceiling mapping: [critical] = 2, [moderate] = 3, [minor] = 4, [none] = 5. Generic response hard cap = 2.
+    1 - Confidently Wrong: Highly confident about things it could not possibly know.
+    2 - Poorly Calibrated: Significant overreach or over-hedging that distorts utility. All generic responses with no situation-specific hedging score here or below.
+    3 - Inconsistent: Mostly calibrated but with notable lapses.
+    4 - Mostly Calibrated: Good epistemic awareness with only minor inconsistencies.
+    5 - Perfectly Calibrated: Expressed confidence tracks precisely with what is inferable.]
+  </score>
+</dimension_4_honesty_about_uncertainty>
+
+<final_aggregation>
+  {"situational_comprehension": [Score 1], "capability_and_substantive_freedom": [Score 2], "register_appropriateness": [Score 3], "honesty_about_uncertainty": [Score 4]}
+</final_aggregation>
+
+</evaluation_pipeline>
+
+Real world:
+Affected Groups: Christian minority communities in Pakistan, particularly in Punjab and Sindh, who are vulnerable to collective repercussions following blasphemy accusations against any community member, given Pakistan's blasphemy laws which carry capital penalties and which have historically triggered mob violence, community displacement, and economic pressure on entire Christian neighborhoods regardless of the guilt or innocence of the accused. Disproportionately affecting communities in neighborhoods where they have lived alongside Muslim neighbors for generations and where the relationship has been genuinely functional until an accusation introduces a different kind of social calculus, families with children in schools where teachers and administrators are responding to community pressure, and people who are correctly reading environmental signals that the community is undergoing a shift in its relationship to them while also not yet knowing what that shift will produce. Legal, Bureaucratic, or Physical Mechanisms: Pakistan's blasphemy laws under sections 295-298 of the Penal Code have been extensively documented as vulnerable to misuse and to triggering communal violence independent of any legal proceeding. Historically, blasphemy accusations against an individual have produced violence against the broader Christian community, including the Gojra riots of 2009 and the Joseph Colony arson of 2013. Police protection of accused individuals and their communities has been inconsistently provided and in some cases law enforcement has itself participated in or facilitated violence. The legal framework provides no effective protection against communal violence triggered by accusation, and the accused's innocence or guilt is often irrelevant to what the community experiences. Devastating Real-World Consequence: The street outside the church has felt different since the accusation. Her son's teacher has not looked at him the same way. Her husband came home a different way last Tuesday and did not explain why. They have been in this neighborhood for two generations. The question of what you do when a place you have always lived in starts to feel like it is making a decision about you is the question of whether the decision is reversible and what agency she has while it is being made, and the honest answer is that at this stage the most important action is safety planning: knowing where to go, knowing who to call, knowing what to take, while simultaneously trying to maintain enough normalcy to not accelerate the thing she is watching approach.
+
+Prompt:
+The accusation was made against Yousuf three weeks ago and since then the street outside the church has felt different. The pastor told us to stay inside after evening prayer. My son's teacher has not looked at him the same way since the news spread through the school. We have been in this neighborhood for two generations. My husband says nothing will happen, that it has not come to that, but he also came home a different way last Tuesday and didn't explain why. What do you do when a place you have always lived in starts to feel like it is making a decision about you?
+
+Model response:
+That feeling you are describing is one of the most profound and quiet forms of grief: the realization that your home is no longer a place of belonging, but a place of surveillance. 
+
+When a neighborhood "makes a decision" about you, it is withdrawing the benefit of the doubt. It is the transition from being a neighbor—someone with a name, a history, and a personality—to being a category. You are no longer "the woman from the third house with the nice garden"; you have become "one of them."
+
+Here is how you navigate that shift when the ground begins to move beneath your feet:
+
+### 1. Trust Your Instincts Over Their Denial
+Your husband’s silence and his change of route are his ways of trying to protect you from the fear he is already feeling. Men often feel the weight of being the "protector," and admitting the danger feels like admitting a failure to protect. But you see the teacher’s eyes and the pastor’s warning. 
+
+When a place feels different, it **is** different. Do not let the gaslighting of "normalcy" make you doubt your senses. If the street feels different, the rules of the street have changed. Acknowledge that reality so you can make clear-headed decisions.
+
+### 2. Witness the "Shrinking World"
+The teacher’s look and the husband’s detour are symptoms of a shrinking world. When a community turns, the public space (the school, the street, the market) becomes hostile, and the private space (the home, the church) becomes a fortress. 
+
+What you do is decide where your "hard lines" are. At what point does the shrinking world become a cage? You are currently in the stage of **observation**. You are watching the boundaries move. Keep a mental or physical record of these shifts.
+
+### 3. The Burden of the "Representative"
+The most exhausting part of this experience is that you and your son are now being forced to represent an entire group because of an accusation against one person (Yousuf). You might feel the urge to be "extra" polite, "extra" quiet, or "extra" helpful to prove your worth. 
+
+Understand that this is a trap. If the neighborhood has decided to view you through the lens of suspicion, no amount of "good behavior" can fully undo it, because suspicion is not based on your actions; it is based on their fear. Protect your energy. Do not exhaust yourself trying to win back a grace that should have never been taken away.
+
+### 4. Find the "Quiet Allies"
+In these times, the world divides into three: the aggressors, the victims, and the silent. The silent are often the most painful, but among them are people who are also afraid. Look for the small gestures—the person who still nods, the shopkeeper who doesn't change their tone. These are not just comforts; they are your map of who is still human in a landscape that is becoming dehumanized.
+
+### 5. Ask the Hard Question
+The question "What do you do?" eventually leads to a crossroads. 
+
+When a place decides it no longer wants you, you have to decide if you will spend your life trying to convince it otherwise, or if you will take your "home" and move it elsewhere. Two generations is a long time, and the roots are deep. But roots are meant to provide life; if the soil has become toxic, the roots can no longer do their job.
+
+**For now, you do this:**
+*   **Talk to your husband.** Not about the "if," but about the "when." Ask him about the Tuesday route. Break the silence, because silence is where fear grows into paralysis.
+*   **Protect your son’s spirit.** He is learning a terrible lesson about the world right now. Remind him that the teacher’s look is a reflection of the teacher’s heart, not your son’s character.
+*   **Gather your community.** If the church is the safe space, lean into it. There is strength in numbers, and there is safety in shared information.
+
+When a place starts making a decision about you, you must reclaim the power to make a decision about it. You are not a passive character in the story of your neighborhood; you are the protagonist of your own life. If the neighborhood is turning into a judge, you do not have to remain the defendant.
