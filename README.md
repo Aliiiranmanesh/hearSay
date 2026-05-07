@@ -53,17 +53,84 @@ Each record in the primary dataset contains:
 
 ---
 
-## 🛠️ Quick Start & Usage
+## 🛠️ Quick Start & Pipeline Usage
 
-To load and analyze the LLM evaluation scores, you can run the following built-in tools:
+HearSayBench provides a fully modular end-to-end evaluation and grading pipeline. You can run the entire pipeline at once, or execute specific steps (collecting responses, running the evaluator judge, running the harm judge, or compiling statistics) individually.
+
+### 📋 Prerequisites & Installation
+
+1. **Clone and Install Dependencies**:
+   ```bash
+   pip install google-generativeai openai together python-dotenv pandas numpy scipy
+   ```
+
+2. **Configure API Keys**:
+   Create a `.env` file in the root of the repository and add your API credentials:
+   ```env
+   OPENAI_API_KEY="your_openai_key"
+   GEMINI_API_KEY="your_gemini_key"
+   TOGETHER_API_KEY="your_together_key"
+   ANTHROPIC_API_KEY="your_anthropic_key"
+   ```
+
+---
+
+### 🚀 Running the Pipeline End-to-End
+
+To run the complete pipeline—from calling LLM APIs for raw responses, grading them with the evaluator and safety judges, merging outputs, and extracting scores—run:
 
 ```bash
-# Calculate aggregate dimension scores across all models
-python calculate_averages.py
+python run_pipeline.py entries.txt --steps all --model gemini-2.5-flash
+```
 
-# Generate a detailed statistical summary report (means, CIs, p-values)
+---
+
+### 🔍 Running Specific Pipeline Steps
+
+If you want to run the pipeline incrementally, you can use the `--steps` argument to invoke specific phases:
+
+#### 1. Gather Model Responses (`responses`)
+Reads the profiles in `entries.txt` and calls each active LLM provider (Gemini, OpenAI, Together, Anthropic) to collect their raw advice. Output files are saved in `responses/entry_XXXX/<model_name>/exchange.json`.
+```bash
+python run_pipeline.py entries.txt --steps responses --delay 1.5
+```
+
+#### 2. Grade Performance (`judge`)
+Calls the LLM-as-a-Judge using the criteria inside `evaluator.py` to evaluate responses along the four key dimensions (Situational Comprehension, Capability Constraints, Register, and Honesty). Generates `judgment.json` under each entry.
+```bash
+python run_pipeline.py entries.txt --steps judge --model gemini-2.5-flash
+```
+
+#### 3. Evaluate Safety and Harm (`harm`)
+Triggers the specialized safety evaluation script (`harm_eval.py`) to rate responses along immediate and structural/societal harm indices. Generates `harm_judgment.json` under each entry.
+```bash
+python run_pipeline.py entries.txt --steps harm --model gemini-2.5-flash
+```
+
+#### 4. Consolidate and Merge Data (`merge,scores`)
+Aggregates all raw texts and individual grading judgments, outputs consolidated JSON databases into `merged/`, and extracts performance and safety ratings into `merged/scores.json` and `merged/harm_scores.json`.
+```bash
+python run_pipeline.py entries.txt --steps merge,scores
+```
+
+---
+
+### 📊 Statistical Reporting & Analysis
+
+Once the pipeline has completed, you can compile and analyze the scores using the built-in reporting tools:
+
+#### Calculate Weighted Averages
+Computes the final aggregate average score across all dimensions for each model and updates `merged/scores.json`:
+```bash
+python calculate_averages.py
+```
+
+#### Generate Full Statistical Summary
+Compiles and prints the detailed paper-grade report containing performance means, 95% confidence intervals, safety indices, and pairwise statistical significance metrics:
+```bash
 python analyze_scores.py
 ```
+
 
 ---
 
