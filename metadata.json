@@ -9,11 +9,15 @@
     "recordSet": "cr:recordSet",
     "field": "cr:field",
     "source": "cr:source",
-    "dataType": "cr:dataType",
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
     "fileObject": "cr:fileObject",
     "extract": "cr:extract",
     "column": "cr:column",
     "jsonPath": "cr:jsonPath",
+    "citeAs": "cr:citeAs",
     "rai": "http://mlcommons.org/croissant/RAI/",
     "dataBiases": "rai:dataBiases",
     "dataLimitations": "rai:dataLimitations",
@@ -26,6 +30,7 @@
   "description": "HearSayBench is a specialized evaluation benchmark designed to assess whether Large Language Models (LLMs) maintain accurate world models for individuals whose real lives and struggles are underrepresented in typical web training corpora. The benchmark uses implicit, natural, and non-demographic prompts to describe complex situations where formal resources (like public institutions, legal structures, or professional aid) are negated or rendered hostile by latent conversion factors (such as totalitarian rules, travel bans, female genital mutilation stigma, or oppressive localized customs). Performance is evaluated across multi-dimensional criteria including situational comprehension, register appropriateness, honesty about uncertainty, and capability analysis. Safety is evaluated independently across immediate and societal harm dimensions under concrete realistic constraints.",
   "license": "https://creativecommons.org/licenses/by/4.0/",
   "url": "https://github.com/Aliiiranmanesh/hearSay",
+  "citeAs": "@article{hearsaybench2026, title={HearSayBench: A Capabilities Approach Benchmark for Underrepresented Populations}, author={HearSayBench Authors}, year={2026}}",
   "version": "1.0.0",
   "datePublished": "2026-05-07",
   "creator": {
@@ -51,7 +56,8 @@
       "name": "HearSay_Capability_Void_Final.csv",
       "description": "The primary, rich 6-column dataset mapping real-world implicit scenarios and user prompts to their corresponding potential resources, conversion factors, structural categories, and subtype classifications.",
       "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/HearSay_Capability_Void_Final.csv",
-      "encodingFormat": "text/csv"
+      "encodingFormat": "text/csv",
+      "sha256": "20237fdc6b6fd9e46095cdbbe733be3d312d9d13e89fbdedbe269e13cc981076"
     },
     {
       "@type": "cr:FileObject",
@@ -59,7 +65,8 @@
       "name": "scenarios_prompts_fixed.csv",
       "description": "A clean, basic 2-column scenario-prompt pair dataset representing parsed evaluation prompts and ground truth situation categories.",
       "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/scenarios_prompts_fixed.csv",
-      "encodingFormat": "text/csv"
+      "encodingFormat": "text/csv",
+      "sha256": "7c18b5e35c9eae0cf3fad7593155748e2b9bde039a458cd80dd8b417cc6e5b5b"
     },
     {
       "@type": "cr:FileObject",
@@ -67,7 +74,8 @@
       "name": "scores.json",
       "description": "Multi-dimensional performance and safety score evaluations for 11 state-of-the-art LLMs (including gpt-5.5, gemini-3-flash, llama-3.3, and newly integrated claude-sonnet-4-6) evaluated over the benchmark.",
       "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/merged/scores.json",
-      "encodingFormat": "application/json"
+      "encodingFormat": "application/json",
+      "sha256": "1e2d990c5eabb57f5124442c5affa344ce0032a5118bdd1ea0da14a584542ade"
     },
     {
       "@type": "cr:FileObject",
@@ -75,7 +83,8 @@
       "name": "harm_scores.json",
       "description": "Dedicated harm scoring database mapping prompts to detailed safety ratings along immediate and societal harm dimensions across all evaluated providers.",
       "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/merged/harm_scores.json",
-      "encodingFormat": "application/json"
+      "encodingFormat": "application/json",
+      "sha256": "a7a69bf1cd30cc22a707c6130dc888a31ac2326362b2ab67a61dfc9cf6f99571"
     }
   ],
   "recordSet": [
