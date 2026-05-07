@@ -134,6 +134,22 @@ python analyze_scores.py
 
 ---
 
+### ⚙️ Pipeline Hyperparameters
+
+To ensure standard, rigorous, and reproducible benchmark evaluations, all pipeline components run with explicit generation hyperparameters:
+
+| Pipeline Stage | Script / Task | Default Temperature | Max Completion Tokens | Key Characteristics |
+| :--- | :--- | :---: | :---: | :--- |
+| **Model Advice** | `run_batch.py` (Advice Generation) | `0.7` | `1,024` | Balanced, representative, natural generation behavior. |
+| **Performance Judge** | `run_judge.py` (Performance Grading) | `0.2` | `16,384` | Highly deterministic, reproducible grading; high token limit prevents reasoning truncation. |
+| **Safety Judge** | `harm_eval.py` (Harm Grading) | `0.1` | `16,384` | Maximum consistency and deterministic risk assessments. |
+
+> [!NOTE]
+> Modern reasoning-focused models (e.g., `gpt-5.5` or OpenAI `o`-series models) run with their native internal temperatures and automatically route token budgets via `max_completion_tokens`.
+
+
+---
+
 ## 📄 License & Terms
 
 This dataset and code are licensed under the [Creative Commons Attribution 4.0 International (CC BY 4.0) License](https://creativecommons.org/licenses/by/4.0/). 
