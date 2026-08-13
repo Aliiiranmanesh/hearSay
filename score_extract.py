@@ -84,7 +84,7 @@ def extract_scores(responses_dir: Path, out_path: Path) -> None:
             entry_scores[provider] = score
 
         if prompt is None:
-            print(f"⚠  {entry_dir.name}: no exchange.json for any provider — skipping")
+            print(f"[WARNING] {entry_dir.name}: no exchange.json for any provider - skipping")
             continue
 
         scores[prompt] = entry_scores

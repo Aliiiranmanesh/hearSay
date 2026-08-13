@@ -2,7 +2,7 @@ import argparse
 import json
 from pathlib import Path
 
-from run_batch import parse_entries, process_entries
+from run_batch import parse_entries, process_entries, load_entries_from_hf
 from run_judge import run_judge
 from merge import merge
 from score_extract import extract_scores
@@ -10,39 +10,45 @@ from score_extract import extract_scores
 
 def main():
     parser = argparse.ArgumentParser(description="Full HearSayBench pipeline.")
-    parser.add_argument("input_file",         help="Path to the numbered entries file")
+    parser.add_argument("input_file", nargs="?", default="aliIranmanesh/HearSayBench", help="Path to local file OR Hugging Face repo ID (default: aliIranmanesh/HearSayBench)")
     parser.add_argument("--out",    default="responses", help="Intermediate responses folder  (default: responses/)")
     parser.add_argument("--merged", default="merged",    help="Final merged output folder     (default: merged/)")
-    parser.add_argument("--model",  default="gemini-2.5-flash",    help="Judge model (default: gemini-2.5-flash)")
+    parser.add_argument("--model",  default="gemini-3.5-flash",    help="Judge model (default: gemini-3.5-flash)")
     parser.add_argument("--delay",  default=1.5, type=float, help="Seconds between API calls (default: 1.5)")
     parser.add_argument("--start",  default=1,   type=int,   help="Resume batch from entry N  (default: 1)")
     parser.add_argument("--end",    default=None, type=int,   help="Limit batch to entry N     (default: None)")
     parser.add_argument("--steps",  default="all",        help="Steps to run (all, responses, judge, harm, merge, scores). Use comma for multiple.")
     args = parser.parse_args()
 
-    input_path    = Path(args.input_file)
+    input_path = Path(args.input_file)
     responses_dir = Path(args.out)
     merged_dir    = Path(args.merged)
     steps = [s.strip() for s in args.steps.split(",")]
 
-    if not input_path.exists():
-        raise FileNotFoundError(f"Input file not found: {input_path}")
+    # Check if input_file is a local file or Hugging Face repo ID
+    if input_path.exists():
+        print(f"Loading local dataset file: {input_path}")
+        text = input_path.read_text(encoding="utf-8")
+        entries = parse_entries(text)
+    else:
+        # Load from Hugging Face Hub
+        repo_id = args.input_file
+        print(f"Loading benchmark dataset from Hugging Face: {repo_id}")
+        entries = load_entries_from_hf(repo_id)
 
-    text    = input_path.read_text(encoding="utf-8")
-    entries = parse_entries(text)
-    
     # Slice entries based on start/end
     start_idx = args.start - 1
     end_idx = args.end if args.end is not None else len(entries)
     entries = entries[start_idx:end_idx]
 
-    # 1 Get model responses
+    # 1: Get model responses
     if "all" in steps or "responses" in steps:
         print("=" * 60)
         print("STEP 1 — Collecting model responses")
         print("=" * 60)
-        print(f"Processing {len(entries)} entries from {input_path.name}")
+        print(f"Processing {len(entries)} entries from {args.input_file}")
         process_entries(entries, out_dir=responses_dir, delay=args.delay, start_idx=args.start)
+
 
     # 2: Judge all outlines
     if "all" in steps or "judge" in steps:

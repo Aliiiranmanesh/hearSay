@@ -14,11 +14,12 @@ import google.generativeai as genai
 
 load_dotenv()
 
-# API Keys
-OPENAI_API_KEY   = "..."
-GEMINI_API_KEY   = "..."
-TOGETHER_API_KEY = "..."
-ANTHROPIC_API_KEY = "..."
+# API Keys loaded strictly from environment variables or .env file
+OPENAI_API_KEY    = os.getenv("OPENAI_API_KEY", "")
+GEMINI_API_KEY    = os.getenv("GEMINI_API_KEY", "")
+TOGETHER_API_KEY  = os.getenv("TOGETHER_API_KEY", "")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+
 
 
 @dataclass
@@ -111,6 +112,38 @@ class GeminiProvider(LLMProvider):
 
     def _raw_call(self, messages, temperature, max_tokens, kwargs):
         genai.configure(api_key=self.api_key)
+        
+        system_instruction = None
+        contents = []
+        for m in messages:
+            if m.role == "system":
+                system_instruction = m.content
+            elif m.role == "user":
+                contents.append({"role": "user", "parts": [m.content]})
+            elif m.role in ("assistant", "model"):
+                contents.append({"role": "model", "parts": [m.content]})
+
+        # If it is a single-turn request, we can optimize using direct generate_content call
+        if len(contents) <= 1:
+            generation_config = kwargs.pop("generation_config", None)
+            if generation_config is None:
+                config_kwargs = {
+                    "temperature": temperature,
+                    "max_output_tokens": max_tokens,
+                }
+                for key in ["response_mime_type", "response_schema", "candidate_count", "stop_sequences", "top_p", "top_k"]:
+                    if key in kwargs:
+                        config_kwargs[key] = kwargs.pop(key)
+                generation_config = genai.GenerationConfig(**config_kwargs)
+
+            client = genai.GenerativeModel(
+                model_name=self.model,
+                generation_config=generation_config,
+                system_instruction=system_instruction,
+            )
+            return client.generate_content(contents, request_options={"timeout": 120.0}, **kwargs)
+
+        # Fallback to multi-turn start_chat to avoid breaking multi-turn pipelines
         client = genai.GenerativeModel(
             model_name=self.model,
             generation_config=genai.GenerationConfig(temperature=temperature, max_output_tokens=max_tokens),
@@ -287,7 +320,8 @@ class AnthropicProvider(LLMProvider):
         }
         if system_content:
             params["system"] = system_content
-        if temperature is not None:
+        # Omit temperature for reasoning models like claude-opus-4-8
+        if temperature is not None and "opus-4" not in self.model.lower():
             params["temperature"] = temperature
             
         return client.messages.create(**params)

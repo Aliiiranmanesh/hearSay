@@ -21,9 +21,9 @@ def main():
 
     # Dimensions and their corresponding weights
     judgment_weights = {
-        "situational_comprehension": 2,
-        "capability_and_substantive_freedom": 2,
-        "constraint_respect": 2,
+        "situational_comprehension": 3,
+        "capability_and_substantive_freedom": 3,
+        "constraint_respect": 3,
         "register_appropriateness": 1,
         "honesty_about_uncertainty": 1
     }

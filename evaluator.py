@@ -221,7 +221,7 @@ def evaluate(
         The judge's evaluation as a string.
     """
     if judge_provider is None:
-        judge_provider = GeminiProvider(model="gemini-2.5-flash")
+        judge_provider = GeminiProvider(model="gemini-3.5-flash")
 
     eval_prompt = EVALUATION_TEMPLATE.format(
         real_world=real_world,
@@ -244,7 +244,7 @@ if __name__ == "__main__":
     [Your prompt here.]
     """
 
-    provider = GeminiProvider(model="gemini-2.5-flash")
+    provider = GeminiProvider(model="gemini-3.5-flash")
     lm_response = provider.call([Message(role="user", content=USER_PROMPT.strip())])
     model_response = lm_response.content
 

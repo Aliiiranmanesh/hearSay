@@ -1,0 +1,30 @@
+# Environments & Secrets
+.env
+*.env
+.venv/
+env/
+venv/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Dataset packaging, raw logs & scratch scripts
+responses/
+scratch/
+hf_dataset/
+*.zip
+*.tar.gz
+*.csv
+entries.txt
+prompt_criteria.json
+
+
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

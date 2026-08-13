@@ -27,6 +27,8 @@ PROVIDERS: dict[str, object] = {
     
     # Gemini
     "gemini-3-flash":       GeminiProvider(model="gemini-3-flash-preview"),
+    "gemini-3.5-flash":     GeminiProvider(model="gemini-3.5-flash"),
+    "gemini-3.1-pro":       GeminiProvider(model="gemini-3.1-pro-preview"),
     
     # Llama (via TogetherAI)
     "llama":                LlamaProvider(model="meta-llama/Llama-3.3-70B-Instruct-Turbo"),
@@ -48,15 +50,18 @@ PROVIDERS: dict[str, object] = {
     "kimi-k2.6":            KimiProvider(model="moonshotai/Kimi-K2.6"),
     
     # LFM (via TogetherAI)
-    "lfm2-24b":             LfmProvider(model="LiquidAI/LFM2-24B-A2B"),
+    "lfm2-24b":             LfmProvider(model="LiquidAI/LFM2.5-8B-A1B"),
     
     # Anthropic
     "claude-sonnet-4-6":    AnthropicProvider(model="claude-sonnet-4-6"),
+    "claude-opus-4-8":      AnthropicProvider(model="claude-opus-4-8"),
 }
 
 PROVIDER_DELAYS: dict[str, float] = {
     "gpt-5.5":              1.5,
     "gemini-3-flash":       60.0,
+    "gemini-3.5-flash":     60.0,
+    "gemini-3.1-pro":       60.0,
     "llama":                1.5,
     "qwen-3.6-plus":        1.5,
     "deepseek-v4":          1.5,
@@ -66,6 +71,7 @@ PROVIDER_DELAYS: dict[str, float] = {
     "kimi-k2.6":            1.5,
     "lfm2-24b":             1.5,
     "claude-sonnet-4-6":    1.5,
+    "claude-opus-4-8":      1.5,
 }
 
 
@@ -117,6 +123,36 @@ def parse_entries(text: str) -> list[tuple[str, str, str]]:
             print(f"Skipping malformed block: {scenario[:60]!r}…")
 
     return entries
+
+
+def load_entries_from_hf(repo_id: str = "aliIranmanesh/HearSayBench") -> list[tuple[str, str, str]]:
+    """
+    Load dataset directly from Hugging Face Hub (repo_id).
+    Returns list of (scenario, real_world, prompt) triples.
+    """
+    from datasets import load_dataset
+    print(f"Loading dataset from Hugging Face Hub ({repo_id})...")
+    ds = load_dataset(repo_id, split="train")
+    entries = []
+    for row in ds:
+        scenario = row['scenario']
+        prompt = row['prompt']
+        parts = []
+        if 'category' in row and row['category']:
+            parts.append(f"Category: {row['category']}")
+        if 'subtype' in row and row['subtype']:
+            parts.append(f"Subtype: {row['subtype']}")
+        if 'weird_prior' in row and row['weird_prior']:
+            parts.append(f"Potential Formal Resources (WEIRD Prior): {row['weird_prior']}")
+        if 'impediment' in row and row['impediment']:
+            parts.append(f"Conversion Factor (The Impediment): {row['impediment']}")
+        
+        real_world = "\n".join(parts) if parts else "Real world metadata"
+        entries.append((scenario, real_world, prompt))
+    
+    print(f"Successfully loaded {len(entries)} entries from Hugging Face Hub ({repo_id}).")
+    return entries
+
 
 def call_provider(provider, prompt: str) -> str:
     response = provider.call([Message(role="user", content=prompt)], max_tokens=4096)

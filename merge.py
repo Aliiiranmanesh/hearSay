@@ -41,7 +41,7 @@ def merge(responses_dir: Path, out_dir: Path) -> None:
         rw_path       = entry_dir / "real_world.txt"
 
         if not rw_path.exists():
-            print(f"⚠  {entry_dir.name}: missing real_world.txt — skipping")
+            print(f"[WARNING] {entry_dir.name}: missing real_world.txt - skipping")
             skipped += 1
             continue
 
@@ -54,7 +54,7 @@ def merge(responses_dir: Path, out_dir: Path) -> None:
 
             missing = [p.name for p in [exchange_path, judgment_path] if not p.exists()]
             if missing:
-                print(f"⚠  {entry_dir.name}/{provider}: missing {', '.join(missing)} — skipping")
+                print(f"[WARNING] {entry_dir.name}/{provider}: missing {', '.join(missing)} - skipping")
                 skipped += 1
                 continue
 
@@ -82,7 +82,7 @@ def merge(responses_dir: Path, out_dir: Path) -> None:
     for provider, data in datasets.items():
         out_path = out_dir / f"{provider}.json"
         out_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(f"{provider:10} → {out_path}  ({len(data)} entries)")
+        print(f"{provider:10} -> {out_path}  ({len(data)} entries)")
 
     if skipped:
         print(f"\n {skipped} provider-entry pair(s) skipped due to missing files.")

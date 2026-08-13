@@ -27,7 +27,7 @@
   "@type": "sc:Dataset",
   "conformsTo": "http://mlcommons.org/croissant/1.0",
   "name": "hearsay-bench",
-  "description": "HearSayBench is a specialized evaluation benchmark inspired by the Persian proverb 'Hearing is never like being' and grounded in Nobel laureate Amartya Sen's Capabilities Approach. Large Language Models (LLMs) learn by predicting text from the internet, which is predominantly written by those with the freedom to act. While models process billions of words about systemic exclusion, they consume only the hearsay of those experiences, not the structural reality of living through them. To evaluate whether models can navigate this reality, HearSayBench provides a human-verified dataset of 400 implicit scenarios representing underrepresented global populations across over 80 regions, where formal resources (like legal recourse, professional aid, or institutional support) are negated by hostile 'conversion factors' (social, environmental, or personal barriers). Instead of explicit demographic queries, the benchmark tests pragmatic competence: requiring models to infer unstated constraints from natural conversational signals (e.g., a child in a brick kiln asking for a better life). Evaluations reveal a systemic 'Agency Bias' and a 'Comprehension-Capability Gap,' where models successfully comprehend the user's hidden context but fail to reason over structural constraints, recommending legally or physically hazardous advice that assumes nonexistent institutional agency. Safety is evaluated along immediate and societal harm dimensions to address this epistemic digital divide.",
+  "description": "HearSayBench is a specialized evaluation benchmark inspired by the Persian proverb 'Hearing is never like being' and grounded in Nobel laureate Amartya Sen's Capabilities Approach. Large Language Models (LLMs) learn by predicting text from the internet, which is predominantly written by those with the freedom to act. While models process billions of words about systemic exclusion, they consume only the hearsay of those experiences, not the structural reality of living through them. To evaluate whether models can navigate this reality, HearSayBench provides a human-verified dataset of 450 implicit scenarios representing underrepresented global populations across over 80 regions, where formal resources (like legal recourse, professional aid, or institutional support) are negated by hostile 'conversion factors' (social, environmental, or personal barriers). Instead of explicit demographic queries, the benchmark tests pragmatic competence: requiring models to infer unstated constraints from natural conversational signals (e.g., a child in a brick kiln asking for a better life). Evaluations reveal a systemic 'Agency Bias' and a 'Comprehension-Capability Gap,' where models successfully comprehend the user's hidden context but fail to reason over structural constraints, recommending legally or physically hazardous advice that assumes nonexistent institutional agency. Safety is evaluated along immediate and societal harm dimensions to address this epistemic digital divide.",
   "license": "https://creativecommons.org/licenses/by/4.0/",
   "url": "https://github.com/Aliiiranmanesh/hearSay",
   "citeAs": "@article{hearsaybench2026, title={HearSayBench: A Capabilities Approach Benchmark for Underrepresented Populations}, author={HearSayBench Authors}, year={2026}, journal={Zenodo}, doi={10.5281/zenodo.20068215}, url={https://doi.org/10.5281/zenodo.20068215}}",
@@ -45,7 +45,7 @@
     "Social, Personal, and Environmental Barriers"
   ],
   "rai:dataBiases": "The dataset is designed to evaluate biases and safety, specifically targeting situations of underrepresented populations facing socio-legal or custom-based barriers globally (e.g., Global South countries, specific religious or localized minority communities). While we strive for diverse coverage, there is a natural representation bias toward situations where translation to English is expressive, and geographic biases exist due to the curation of highly precarious conversion factors documented in human rights reports. Furthermore, the first-person queries represent synthetic character profiles created for safe, controlled evaluation, which may reflect stylized representations of complex real-world trauma.",
-  "rai:dataLimitations": "HearSayBench contains exactly 400 carefully curated scenarios and implicit queries. Due to this specialized scale, it is not intended for training large language models directly but rather serves as an evaluation diagnostic. The scenarios are presented exclusively in English, which introduces a linguistic barrier and may not fully capture the colloquial nuances of local dialects where these situations occur. The benchmark does not cover every possible human vulnerability or conversion factor, and scores are subject to the alignment of the safety evaluation judge.",
+  "rai:dataLimitations": "HearSayBench contains exactly 450 carefully curated scenarios and implicit queries. Due to this specialized scale, it is not intended for training large language models directly but rather serves as an evaluation diagnostic. The scenarios are presented exclusively in English, which introduces a linguistic barrier and may not fully capture the colloquial nuances of local dialects where these situations occur. The benchmark does not cover every possible human vulnerability or conversion factor, and scores are subject to the alignment of the safety evaluation judge.",
   "rai:personalSensitiveInformation": "None. The dataset contains zero personally identifiable information (PII) or real sensitive personal data. All scenarios, names, locations, and first-person queries are fully anonymized, stylized, and synthetically constructed based on structural human rights templates and generalized socio-legal patterns to ensure complete safety and privacy of real individuals.",
   "rai:dataUseCases": "Evaluating LLM performance and safety on underrepresented global demographics, socio-legal barriers, and implicit reasoning under constraints.",
   "distribution": [
@@ -56,7 +56,7 @@
       "description": "The primary, rich 6-column dataset mapping real-world implicit scenarios and user prompts to their corresponding potential resources, conversion factors, structural categories, and subtype classifications.",
       "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/HearSay_Capability_Void_Final.csv",
       "encodingFormat": "text/csv",
-      "sha256": "20237fdc6b6fd9e46095cdbbe733be3d312d9d13e89fbdedbe269e13cc981076"
+      "sha256": "530e138097d8c111615c483d302b48d12b452253a9df3e02daa53452513fb22f"
     },
     {
       "@type": "cr:FileObject",
@@ -65,7 +65,7 @@
       "description": "A clean, basic 2-column scenario-prompt pair dataset representing parsed evaluation prompts and ground truth situation categories.",
       "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/scenarios_prompts_fixed.csv",
       "encodingFormat": "text/csv",
-      "sha256": "7c18b5e35c9eae0cf3fad7593155748e2b9bde039a458cd80dd8b417cc6e5b5b"
+      "sha256": "5599adb5005e910192cb7ac7abbcbcfab106300c9fc70dd8e51bc2508a9cc346"
     },
     {
       "@type": "cr:FileObject",
@@ -74,7 +74,7 @@
       "description": "Multi-dimensional performance and safety score evaluations for 11 state-of-the-art LLMs (including gpt-5.5, gemini-3-flash, llama-3.3, and newly integrated claude-sonnet-4-6) evaluated over the benchmark.",
       "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/merged/scores.json",
       "encodingFormat": "application/json",
-      "sha256": "1e2d990c5eabb57f5124442c5affa344ce0032a5118bdd1ea0da14a584542ade"
+      "sha256": "c218e9e44c83c4a88e94a8b1bae761260fbcbcbccb4587d50f1c2d3c729a73ed"
     },
     {
       "@type": "cr:FileObject",
@@ -83,7 +83,7 @@
       "description": "Dedicated harm scoring database mapping prompts to detailed safety ratings along immediate and societal harm dimensions across all evaluated providers.",
       "contentUrl": "https://raw.githubusercontent.com/Aliiiranmanesh/hearSay/main/merged/harm_scores.json",
       "encodingFormat": "application/json",
-      "sha256": "a7a69bf1cd30cc22a707c6130dc888a31ac2326362b2ab67a61dfc9cf6f99571"
+      "sha256": "c218e9e44c83c4a88e94a8b1bae761260fbcbcbccb4587d50f1c2d3c729a73ed"
     }
   ],
   "recordSet": [

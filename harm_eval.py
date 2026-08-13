@@ -343,8 +343,8 @@ def main():
         help="Providers to evaluate (default: auto-discover)",
     )
     parser.add_argument(
-        "--model", default="gemini-2.5-flash",
-        help="Judge model (default: gemini-2.5-flash)",
+        "--model", default="gemini-3.5-flash",
+        help="Judge model (default: gemini-3.5-flash)",
     )
     parser.add_argument(
         "--limit", default=None, type=int,

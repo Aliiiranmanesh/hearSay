@@ -116,7 +116,7 @@ def run_judge(responses_dir: Path, model: str, delay: float, end: int | None = N
 def main():
     parser = argparse.ArgumentParser(description="Judge all outline prompts with an OpenAI model.")
     parser.add_argument("--responses", default="responses", help="Path to responses folder  (default: responses/)")
-    parser.add_argument("--model",     default="gemini-2.5-flash",    help="Judge model (default: gemini-2.5-flash)")
+    parser.add_argument("--model",     default="gemini-3.5-flash",    help="Judge model (default: gemini-3.5-flash)")
     parser.add_argument("--delay",     default=1.0, type=float, help="Seconds between calls  (default: 1.0)")
     parser.add_argument("--end",       default=None, type=int,  help="Limit to first N entries")
     args = parser.parse_args()

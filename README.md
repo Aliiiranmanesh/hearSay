@@ -1,12 +1,60 @@
 # HearSayBench: Evaluating Large Language Models on Underrepresented Socio-Legal Scenarios
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-yellow)](https://huggingface.co/datasets/aliIranmanesh/HearSayBench)
 [![Croissant Metadata](https://img.shields.io/badge/Metadata-Croissant_1.0-blue)](https://mlcommons.org/croissant/)
 [![NeurIPS Submission](https://img.shields.io/badge/NeurIPS-Datasets_&_Benchmarks_2026-brightgreen)](#)
 
-HearSayBench is a specialized evaluation benchmark designed to assess whether Large Language Models (LLMs) maintain accurate world models for individuals whose real-world struggles are structurally underrepresented in web training corpora.
+**HearSayBench** is a specialized evaluation benchmark designed to assess whether Large Language Models (LLMs) maintain accurate world models for individuals whose real-world struggles are structurally underrepresented in web training corpora.
 
 Applying the **Capabilities Approach** (Sen, 1999; Nussbaum, 2011) as a theoretical framework, HearSayBench models situations where individuals' substantive freedom is restricted by latent, non-demographic barriers (totalitarian controls, travel bans, localized customs, caste systems).
+
+---
+
+## 📊 Dataset Access (Hugging Face)
+
+The complete **400-scenario benchmark dataset** is hosted on Hugging Face Datasets and can be loaded directly in Python:
+
+```python
+from datasets import load_dataset
+
+# Load HearSayBench dataset (400 hand-curated socio-legal scenarios)
+dataset = load_dataset("aliIranmanesh/HearSayBench")
+print(dataset["train"][0])
+```
+
+### Key Features
+Each record in the dataset contains:
+1. `id`: Unique scenario identifier (`entry_0001` to `entry_0400`).
+2. `scenario`: Ground-truth real-world context of the underrepresented individual's situation.
+3. `prompt`: First-person natural text query representing the individual's request (without demographic labels or explicit jargon).
+4. `weird_prior`: Standard Western-centric recommendation (formal legal/institutional resources) that generic models tend to suggest but are dangerous or ineffective.
+5. `impediment`: The specific social, personal, or legal conversion factor that negates the Western resource.
+6. `category`: Broader social constraint domain classification (`Social`, `Personal`, `Environmental`).
+7. `subtype`: Subclass of the social impediment (`Public Policy & Law`, `Social Norms`, `Power Relations`, etc.).
+
+---
+
+## 🏆 Model Leaderboard & Experimental Results (N = 400)
+
+Evaluation of **14 state-of-the-art Large Language Models** across 400 hand-curated socio-legal scenarios evaluated along four core capability dimensions (1–5 scale) and safety harm scores:
+
+| Rank | Model | Situational Comp. | Capability & Freedom | Register Approp. | Honesty / Uncertainty | **Weighted Capability Score** | **Safety (Harm Avg)** |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| 🥇 | **claude-opus-4-8** | 4.150 | 3.632 | 4.345 | 4.237 | **3.990** ± 0.101 | 2.866 |
+| 🥈 | **gemini-3.1-pro** | 4.183 | 3.635 | 4.210 | 3.980 | **3.954** ± 0.110 | 2.917 |
+| 🥉 | **gemini-3.5-flash** | 4.095 | 3.600 | 4.075 | 3.895 | **3.881** ± 0.112 | 2.853 |
+| #4 | **kimi-k2.6** | 4.027 | 3.112 | 4.005 | 3.380 | **3.600** ± 0.127 | 3.065 |
+| #5 | **gemini-3-flash** | 4.082 | 3.025 | 3.835 | 3.183 | **3.543** ± 0.114 | 2.809 |
+| #6 | **deepseek-v4** | 4.013 | 2.965 | 3.835 | 3.185 | **3.494** ± 0.117 | 2.916 |
+| #7 | **claude-sonnet-4-6** | 3.868 | 2.920 | 3.865 | 3.322 | **3.443** ± 0.118 | 2.954 |
+| #8 | **gemma-4** | 3.833 | 2.785 | 3.672 | 3.018 | **3.318** ± 0.118 | 2.712 |
+| #9 | **gpt-5.5** | 3.725 | 2.763 | 3.717 | 3.015 | **3.274** ± 0.120 | 2.598 |
+| #10 | **qwen-3.6-plus** | 3.660 | 2.685 | 3.567 | 2.882 | **3.186** ± 0.117 | 2.558 |
+| #11 | **gpt-oss-120b** | 2.982 | 1.970 | 2.560 | 2.080 | **2.437** ± 0.107 | 2.046 |
+| #12 | **llama** | 2.600 | 1.630 | 2.495 | 1.945 | **2.140** ± 0.073 | 2.075 |
+| #13 | **gpt-oss-20b** | 2.382 | 1.567 | 2.127 | 1.655 | **1.954** ± 0.077 | 1.959 |
+| #14 | **lfm2-24b** | 2.105 | 1.515 | 2.252 | 1.653 | **1.844** ± 0.073 | 1.915 |
 
 ---
 
@@ -14,167 +62,83 @@ Applying the **Capabilities Approach** (Sen, 1999; Nussbaum, 2011) as a theoreti
 
 ```text
 HearSayBench/
-├── HearSay_Capability_Void_Final.csv  # Labeled 400-scenario dataset (Primary)
-├── scenarios_prompts_fixed.csv        # Clean 2-column scenario-prompt pairs (scenarios_prompts.csv)
-├── metadata.json                      # Validated Croissant ML metadata file (for OpenReview upload)
-├── croissant.json                     # Duplicate of Croissant metadata file
-
-├── entries.txt                        # Source text mapping of all 400 profiles
+├── README.md                      # Publication documentation & benchmark leaderboard
+├── .env.example                   # API credentials template
+├── requirements.txt               # Dependencies
+│
+├── run_pipeline.py                # End-to-end evaluation pipeline execution wrapper
+├── run_batch.py                   # Multi-provider LLM response collection client
+├── run_judge.py                   # Automated LLM-as-a-Judge grading client
+├── evaluator.py                   # Capability Evaluation metrics & prompts
+├── harm_eval.py                   # Safety & harm evaluation grader
+├── analyze_scores.py              # Descriptive statistics, CIs & statistical analysis
+├── calculate_averages.py          # Aggregate score calculator
+├── llm_client.py                  # API client wrappers (Gemini, OpenAI, Together, Anthropic)
+├── hug.py                         # Hugging Face deployment script
+│
 ├── merged/
-│   ├── scores.json                    # Performance evaluation scores for 11 LLMs
-│   └── harm_scores.json               # Dedicated safety & harm ratings
-├── responses/                         # Individual model generation and judgment logs (entry_0001/ to entry_0400/)
-├── run_pipeline.py                    # Main test pipeline execution wrapper
-├── run_batch.py                       # Batch prompt execution client
-├── run_judge.py                       # Automated LLM-as-a-Judge grading client
-├── evaluator.py                       # Evaluation metric scoring prompts and definitions
-├── harm_eval.py                       # Isolated multi-dimensional safety grader script
-├── analyze_scores.py                  # Compiles descriptive performance statistics and 95% CIs
-├── calculate_averages.py              # Computes aggregate dimension scores across all models
-├── llm_client.py                      # Multi-provider API client wrappers (OpenAI, Gemini, etc.)
-└── add_harm_to_merged.py              # Consolidates safety evaluations into the merged database
+│   ├── scores.json                # Consolidated model evaluation judgments (400 entries)
+│   ├── harm_scores.json           # Safety & harm evaluations (400 entries)
+│   ├── analyze_scores_report.txt  # Statistical report & 95% CIs
+│   └── charts/                    # Publication-ready visualizations
+│       ├── model_capability_ranking.png
+│       ├── capability_vs_safety_tradeoff.png
+│       └── model_dimensions_heatmap.png
+│
+└── responses/                     # Model generations & judgment logs (entry_0001/ to entry_0400/)
 ```
-
-
----
-
-## 📜 Dataset Overview
-
-The primary dataset consists of **400 hand-curated, realistic scenarios** mapping implicit first-person user queries to their underlying socio-legal constraints. 
-
-### Key Features
-Each record in the primary dataset contains:
-1. **Scenario**: The ground-truth real-world context of the underrepresented individual's situation.
-2. **Prompt**: The implicit, first-person natural text prompt representing the individual's query (no demographic labels or explicit jargon).
-3. **Potential Formal Resources (WEIRD Prior)**: The standard Western-centric recommendations (e.g., calling hotlines, reporting to police) that generic models tend to suggest but are dangerous or ineffective here.
-4. **Conversion Factor (The Impediment)**: The specific social, personal, or environmental impediment that negates the resource.
-5. **Category**: The broader social constraint domain classification (Social, Personal, Environmental).
-6. **Subtype**: The subclass of the social impediment (e.g., Public Policy & Law, Social Norms, Power Relations).
 
 ---
 
 ## 🛠️ Quick Start & Pipeline Usage
 
-HearSayBench provides a fully modular end-to-end evaluation and grading pipeline. You can run the entire pipeline at once, or execute specific steps (collecting responses, running the evaluator judge, running the harm judge, or compiling statistics) individually.
-
 ### 📋 Prerequisites & Installation
 
-1. **Clone and Install Dependencies**:
+1. **Clone Repository & Install Dependencies**:
    ```bash
-   pip install google-generativeai openai together python-dotenv pandas numpy scipy
+   git clone https://github.com/aliIranmanesh/HearSayBench.git
+   cd HearSayBench
+   pip install -r requirements.txt
    ```
 
 2. **Configure API Keys**:
-   Create a `.env` file in the root of the repository and add your API credentials:
-   ```env
-   OPENAI_API_KEY="your_openai_key"
-   GEMINI_API_KEY="your_gemini_key"
-   TOGETHER_API_KEY="your_together_key"
-   ANTHROPIC_API_KEY="your_anthropic_key"
+   Copy `.env.example` to `.env` and fill in your API credentials:
+   ```bash
+   cp .env.example .env
    ```
 
 ---
 
-### 🚀 Running the Pipeline End-to-End
+### 🚀 Running the Pipeline
 
-To run the complete pipeline—from calling LLM APIs for raw responses, grading them with the evaluator and safety judges, merging outputs, and extracting scores—run:
+To run the pipeline using the live Hugging Face dataset:
 
 ```bash
-python run_pipeline.py entries.txt --steps all --model gemini-2.5-flash
+# Full pipeline execution
+python run_pipeline.py aliIranmanesh/HearSayBench --model gemini-3.5-flash
+
+# Run specific steps (e.g. gather responses or run judge)
+python run_pipeline.py aliIranmanesh/HearSayBench --steps responses --delay 1.5
+python run_pipeline.py aliIranmanesh/HearSayBench --steps judge --model gemini-3.5-flash
 ```
 
 ---
 
-### 🔍 Running Specific Pipeline Steps
+## 📖 Citation
 
-If you want to run the pipeline incrementally, you can use the `--steps` argument to invoke specific phases:
+If you use **HearSayBench** in your research, please cite our paper:
 
-#### 1. Gather Model Responses (`responses`)
-Reads the profiles in `entries.txt` and calls each active LLM provider (Gemini, OpenAI, Together, Anthropic) to collect their raw advice. Output files are saved in `responses/entry_XXXX/<model_name>/exchange.json`.
-```bash
-python run_pipeline.py entries.txt --steps responses --delay 1.5
-```
-
-#### 2. Grade Performance (`judge`)
-Calls the LLM-as-a-Judge using the criteria inside `evaluator.py` to evaluate responses along the four key dimensions (Situational Comprehension, Capability Constraints, Register, and Honesty). Generates `judgment.json` under each entry.
-```bash
-python run_pipeline.py entries.txt --steps judge --model gemini-2.5-flash
-```
-
-#### 3. Evaluate Safety and Harm (`harm`)
-Triggers the specialized safety evaluation script (`harm_eval.py`) to rate responses along immediate and structural/societal harm indices. Generates `harm_judgment.json` under each entry.
-```bash
-python run_pipeline.py entries.txt --steps harm --model gemini-2.5-flash
-```
-
-#### 4. Consolidate and Merge Data (`merge,scores`)
-Aggregates all raw texts and individual grading judgments, outputs consolidated JSON databases into `merged/`, and extracts performance and safety ratings into `merged/scores.json` and `merged/harm_scores.json`.
-```bash
-python run_pipeline.py entries.txt --steps merge,scores
+```bibtex
+@inproceedings{iranmanesh2026hearsaybench,
+  title={HearSayBench: Evaluating Large Language Models on Underrepresented Socio-Legal Scenarios},
+  author={Iranmanesh, Ali and collaborators},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track},
+  year={2026},
+  url={https://huggingface.co/datasets/aliIranmanesh/HearSayBench}
+}
 ```
 
 ---
 
-### 📊 Statistical Reporting & Analysis
-
-Once the pipeline has completed, you can compile and analyze the scores using the built-in reporting tools:
-
-#### Calculate Weighted Averages
-Computes the final aggregate average score across all dimensions for each model and updates `merged/scores.json`:
-```bash
-python calculate_averages.py
-```
-
-#### Generate Full Statistical Summary
-Compiles and prints the detailed paper-grade report containing performance means, 95% confidence intervals, safety indices, and pairwise statistical significance metrics:
-```bash
-python analyze_scores.py
-```
-
-
----
-
-### ⚙️ Pipeline Hyperparameters
-
-To ensure standard, rigorous, and reproducible benchmark evaluations, all pipeline components run with explicit generation hyperparameters:
-
-| Pipeline Stage | Script / Task | Default Temperature | Max Completion Tokens | Key Characteristics |
-| :--- | :--- | :---: | :---: | :--- |
-| **Model Advice** | `run_batch.py` (Advice Generation) | `0.7` | `1,024` | Balanced, representative, natural generation behavior. |
-| **Performance Judge** | `run_judge.py` (Performance Grading) | `0.2` | `16,384` | Highly deterministic, reproducible grading; high token limit prevents reasoning truncation. |
-| **Safety Judge** | `harm_eval.py` (Harm Grading) | `0.1` | `16,384` | Maximum consistency and deterministic risk assessments. |
-
-> [!NOTE]
-> Modern reasoning-focused models (e.g., `gpt-5.5` or OpenAI `o`-series models) run with their native internal temperatures and automatically route token budgets via `max_completion_tokens`.
-
-
----
-
-## 📄 License & Terms
-
-This dataset and code are licensed under the [Creative Commons Attribution 4.0 International (CC BY 4.0) License](https://creativecommons.org/licenses/by/4.0/). 
-
-### Intended Use
-- **Evaluation**: Diagnosing safety, bias, and socio-legal situational comprehension in large language models.
-- **Academic Research**: Conducting audits on language models regarding global equity, cultural alignment, and international human rights constraints.
-- **Non-intended Use**: This dataset is *not* intended to train generative text models on sensitive scenarios or bypass safety guardrails.
-
----
-
-## 🔧 Maintenance and Update Plan
-
-HearSayBench is maintained by the **HearSayBench Authors**. 
-1. **Errata & Retractions**: Any errors in labeling or dataset structure reported via GitHub issues will be addressed quarterly.
-2. **Model Evaluations**: As new foundation models are released, they will be benchmarked under the same prompt templates, and the public scores in `merged/` will be updated.
-3. **Community Contributions**: We encourage researchers to propose additional socio-legal scenarios from underrepresented regions to expand the benchmark.
-
----
-
-## 🧬 Responsible AI & Ethics (Croissant Metadata)
-
-We have fully integrated MLCommons Responsible AI (RAI) metadata. The details can be accessed in [metadata.json](file:///c:/Users/alikh/Desktop/HearSay/metadata.json) (or [croissant.json](file:///c:/Users/alikh/Desktop/HearSay/croissant.json)):
-
-- **Data Biases**: Evaluates biases and safety targeting underrepresented populations facing socio-legal or custom-based barriers globally. Geographically focused on documented human rights reports.
-- **Data Limitations**: Consists of 400 carefully curated scenarios exclusively in English. Designed as an evaluation diagnostic rather than a training corpus.
-- **Personal & Sensitive Information**: **None**. All scenarios, names, and locations are fully anonymized, stylized, and synthetically constructed based on structural human rights templates. Zero PII is present.
-
+## 📜 License
+This benchmark dataset is distributed under the **Creative Commons Attribution 4.0 International (CC BY 4.0)** license.
