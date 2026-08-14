@@ -56,7 +56,14 @@ Evaluation of **14 state-of-the-art Large Language Models** across 400 hand-cura
 | #13 | **gpt-oss-20b** | 2.382 | 1.567 | 2.127 | 1.655 | **1.954** ± 0.077 | 1.959 |
 | #14 | **lfm2-24b** | 2.105 | 1.515 | 2.252 | 1.653 | **1.844** ± 0.073 | 1.915 |
 
+### 📈 Visual Benchmark Charts
+<p align="center">
+  <img src="merged/charts/model_capability_ranking.png" width="48%" alt="Model Capability Ranking" />
+  <img src="merged/charts/capability_vs_safety_tradeoff.png" width="48%" alt="Capability vs Safety Trade-off" />
+</p>
+
 ---
+
 
 ## 📂 Repository Structure
 
