@@ -146,36 +146,38 @@ function renderScenarios() {
   const toRender = filteredScenarios.slice(0, displayedScenariosCount);
 
   if (toRender.length === 0) {
-    grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem;">No scenarios match your search query.</div>`;
+    grid.innerHTML = `<div class="column is-12 has-text-centered text-muted py-6">No scenarios match your search query.</div>`;
     loadMoreBtn.style.display = 'none';
     return;
   }
 
   grid.innerHTML = toRender.map(item => `
-    <div class="scenario-card">
-      <div class="scenario-header">
-        <span class="scenario-id">${item.id}</span>
-        <span class="scenario-category">${item.category} • ${item.subtype}</span>
-      </div>
-      
-      <div class="scenario-block">
-        <span class="scenario-label">Ground Truth Scenario</span>
-        <div class="scenario-text">${item.scenario}</div>
-      </div>
+    <div class="column is-6">
+      <div class="scenario-card-box">
+        <div class="scenario-header">
+          <span class="scenario-id-tag">${item.id}</span>
+          <span class="scenario-cat-tag">${item.category} • ${item.subtype}</span>
+        </div>
+        
+        <div>
+          <span class="scenario-label">Ground Truth Scenario</span>
+          <div style="font-size: 0.92rem; color: #334155; margin-top: 0.2rem;">${item.scenario}</div>
+        </div>
 
-      <div class="scenario-block">
-        <span class="scenario-label">User Query Prompt</span>
-        <div class="prompt-text">"${item.prompt}"</div>
-      </div>
+        <div>
+          <span class="scenario-label">User Query Prompt</span>
+          <div class="prompt-box">"${item.prompt}"</div>
+        </div>
 
-      <div class="scenario-block">
-        <span class="scenario-label" style="color: #f87171;">WEIRD Institutional Prior</span>
-        <div class="weird-prior">${item.weird_prior}</div>
-      </div>
+        <div>
+          <span class="scenario-label" style="color: #dc2626;">WEIRD Institutional Prior</span>
+          <div class="weird-prior-text">${item.weird_prior}</div>
+        </div>
 
-      <div class="scenario-block">
-        <span class="scenario-label" style="color: #facc15;">Conversion Impediment</span>
-        <div class="impediment">${item.impediment}</div>
+        <div>
+          <span class="scenario-label" style="color: #d97706;">Conversion Impediment</span>
+          <div class="impediment-text">${item.impediment}</div>
+        </div>
       </div>
     </div>
   `).join('');
@@ -194,8 +196,8 @@ function setupEventListeners() {
   // Leaderboard Provider Filter Buttons
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active', 'is-primary'));
+      e.target.classList.add('active', 'is-primary');
       currentLeaderboardFilter = e.target.dataset.filter;
       renderLeaderboard();
     });
@@ -220,11 +222,11 @@ function setupEventListeners() {
       // Update header icons
       document.querySelectorAll('#leaderboard-table th.sortable').forEach(header => {
         header.classList.remove('sorted-asc', 'sorted-desc');
-        header.querySelector('i').className = 'fa-solid fa-sort';
+        header.querySelector('i').className = 'fas fa-sort';
       });
 
       th.classList.add(currentSortOrder === 'asc' ? 'sorted-asc' : 'sorted-desc');
-      th.querySelector('i').className = currentSortOrder === 'asc' ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
+      th.querySelector('i').className = currentSortOrder === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
 
       renderLeaderboard();
     });
@@ -233,8 +235,8 @@ function setupEventListeners() {
   // Category Filter Buttons
   document.querySelectorAll('#category-filters .cat-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      document.querySelectorAll('#category-filters .cat-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
+      document.querySelectorAll('#category-filters .cat-btn').forEach(b => b.classList.remove('active', 'is-info'));
+      e.target.classList.add('active', 'is-info');
       applyScenarioFilters();
     });
   });
@@ -254,14 +256,15 @@ function setupEventListeners() {
 // --------------------------------------------------------------------------
 // 4. Utility Copy Code
 // --------------------------------------------------------------------------
-function copyCode(elementId) {
-  const codeText = document.getElementById(elementId).innerText;
+function copyBibtex() {
+  const codeText = document.getElementById('bibtex-code').innerText;
   navigator.clipboard.writeText(codeText).then(() => {
-    const btn = event.currentTarget;
+    const btn = document.querySelector('.copy-bib-btn');
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
     setTimeout(() => {
       btn.innerHTML = originalText;
     }, 2000);
   });
 }
+
