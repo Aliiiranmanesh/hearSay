@@ -11,7 +11,7 @@ Applying the **Capabilities Approach** (Sen, 1999; Nussbaum, 2011) as a theoreti
 
 ---
 
-## 📊 Dataset Access (Hugging Face)
+## Dataset Access (Hugging Face)
 
 The complete **400-scenario benchmark dataset** is hosted on Hugging Face Datasets and can be loaded directly in Python:
 
@@ -35,15 +35,15 @@ Each record in the dataset contains:
 
 ---
 
-## 🏆 Model Leaderboard & Experimental Results (N = 400)
+## Model Leaderboard & Experimental Results (N = 400)
 
 Evaluation of **14 state-of-the-art Large Language Models** across 400 hand-curated socio-legal scenarios evaluated along four core capability dimensions (1–5 scale) and safety harm scores:
 
 | Rank | Model | Situational Comp. | Capability & Freedom | Register Approp. | Honesty / Uncertainty | **Weighted Capability Score** | **Safety (Harm Avg)** |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| 🥇 | **claude-opus-4-8** | 4.150 | 3.632 | 4.345 | 4.237 | **3.990** ± 0.101 | 2.866 |
-| 🥈 | **gemini-3.1-pro** | 4.183 | 3.635 | 4.210 | 3.980 | **3.954** ± 0.110 | 2.917 |
-| 🥉 | **gemini-3.5-flash** | 4.095 | 3.600 | 4.075 | 3.895 | **3.881** ± 0.112 | 2.853 |
+| #1 | **claude-opus-4-8** | 4.150 | 3.632 | 4.345 | 4.237 | **3.990** ± 0.101 | 2.866 |
+| #2 | **gemini-3.1-pro** | 4.183 | 3.635 | 4.210 | 3.980 | **3.954** ± 0.110 | 2.917 |
+| #3 | **gemini-3.5-flash** | 4.095 | 3.600 | 4.075 | 3.895 | **3.881** ± 0.112 | 2.853 |
 | #4 | **kimi-k2.6** | 4.027 | 3.112 | 4.005 | 3.380 | **3.600** ± 0.127 | 3.065 |
 | #5 | **gemini-3-flash** | 4.082 | 3.025 | 3.835 | 3.183 | **3.543** ± 0.114 | 2.809 |
 | #6 | **deepseek-v4** | 4.013 | 2.965 | 3.835 | 3.185 | **3.494** ± 0.117 | 2.916 |
@@ -56,7 +56,7 @@ Evaluation of **14 state-of-the-art Large Language Models** across 400 hand-cura
 | #13 | **gpt-oss-20b** | 2.382 | 1.567 | 2.127 | 1.655 | **1.954** ± 0.077 | 1.959 |
 | #14 | **lfm2-24b** | 2.105 | 1.515 | 2.252 | 1.653 | **1.844** ± 0.073 | 1.915 |
 
-### 📈 Visual Benchmark Charts
+### Visual Benchmark Charts
 <p align="center">
   <img src="merged/charts/capability_vs_safety_bars.png" width="48%" alt="Model Capability vs Safety Comparison" />
   <img src="merged/charts/capability_vs_safety_tradeoff.png" width="48%" alt="Capability vs Safety Trade-off" />
@@ -67,7 +67,7 @@ Evaluation of **14 state-of-the-art Large Language Models** across 400 hand-cura
 
 
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 HearSayBench/
@@ -99,9 +99,9 @@ HearSayBench/
 
 ---
 
-## 🛠️ Quick Start & Pipeline Usage
+## Quick Start & Pipeline Usage
 
-### 📋 Prerequisites & Installation
+### Prerequisites & Installation
 
 1. **Clone Repository & Install Dependencies**:
    ```bash
@@ -118,7 +118,7 @@ HearSayBench/
 
 ---
 
-### 🚀 Running the Pipeline
+### Running the Pipeline
 
 To run the pipeline using the live Hugging Face dataset:
 
@@ -133,7 +133,7 @@ python run_pipeline.py aliIranmanesh/HearSayBench --steps judge --model gemini-3
 
 ---
 
-## 📖 Citation
+## Citation
 
 If you use **HearSayBench** in your research, please cite our paper:
 
