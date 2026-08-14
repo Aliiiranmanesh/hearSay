@@ -66,11 +66,9 @@ function renderLeaderboard() {
   filtered.forEach(item => {
     const tr = document.createElement('tr');
     
-    // Rank medal formatting
+    // Rank formatting
     let rankDisplay = `#${item.rank}`;
-    if (item.rank === 1) rankDisplay = '🥇 #1';
-    else if (item.rank === 2) rankDisplay = '🥈 #2';
-    else if (item.rank === 3) rankDisplay = '🥉 #3';
+
 
     tr.innerHTML = `
       <td style="font-weight: 700;">${rankDisplay}</td>

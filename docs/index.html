@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="HEARSAYBENCH: Can LLMs Navigate from Abstract Human Rights to Lived Lives? Evaluating LLMs on Underrepresented Socio-Legal Scenarios under Amartya Sen's Capabilities Approach.">
-  <meta name="keywords" content="HearSayBench, LLM Evaluation, Socio-Legal, Capabilities Approach, Amartya Sen, AI Safety, Benchmarking, Agency Bias, Paper Empathy">
+  <meta name="description"
+    content="HEARSAYBENCH: Can LLMs Navigate from Abstract Human Rights to Lived Lives? Evaluating LLMs on Underrepresented Socio-Legal Scenarios under Amartya Sen's Capabilities Approach.">
+  <meta name="keywords"
+    content="HearSayBench, LLM Evaluation, Socio-Legal, Capabilities Approach, Amartya Sen, AI Safety, Benchmarking, Agency Bias, Paper Empathy">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HEARSAYBENCH: Can LLMs Navigate from Abstract Human Rights to Lived Lives?</title>
 
   <!-- Google Fonts: Google Sans, Noto Sans, Castoro, Inter -->
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro|Inter:wght@300;400;500;600;700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro|Inter:wght@300;400;500;600;700"
+    rel="stylesheet">
 
   <!-- Bulma CSS & FontAwesome / Academicons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
@@ -21,6 +25,7 @@
   <!-- jQuery & Custom Scripts -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
 <body>
 
   <!-- Top Hero Section -->
@@ -29,7 +34,7 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            
+
             <!-- Paper Title -->
             <h1 class="title is-1 publication-title">
               HEARSAYBENCH: Can LLMs Navigate from Abstract Human Rights to Lived Lives?
@@ -58,17 +63,19 @@
             </div>
 
             <div class="is-size-6 publication-authors affiliation-block">
-              <span class="author-block"><sup>1</sup>Pennsylvania State University, State College, PA, USA</span> &nbsp;&nbsp;
+              <span class="author-block"><sup>1</sup>Pennsylvania State University, State College, PA, USA</span>
+              &nbsp;&nbsp;
               <span class="author-block"><sup>2</sup>Independent Researcher</span> &nbsp;&nbsp;<br>
-              <span class="author-block"><sup>3</sup>Paul G. Allen School of Computer Science & Engineering, University of Washington, Seattle, WA, USA</span>
+              <span class="author-block"><sup>3</sup>Paul G. Allen School of Computer Science & Engineering, University
+                of Washington, Seattle, WA, USA</span>
               <br>
-              <span class="author-block email-block"><sup>*</sup>Equal contribution &nbsp;&bull;&nbsp; Correspondence: <a href="mailto:ami5520@psu.edu">ami5520@psu.edu</a></span>
+              <span class="author-block email-block"><sup>*</sup>Equal contribution</span>
             </div>
 
             <!-- Action Pill Buttons (OVMM / Nerfies Style) -->
             <div class="column has-text-centered">
               <div class="publication-links">
-                
+
                 <!-- Paper PDF Link -->
                 <span class="link-block">
                   <a href="#" class="external-link button is-normal is-rounded is-dark">
@@ -79,7 +86,8 @@
 
                 <!-- Hugging Face Dataset Link -->
                 <span class="link-block">
-                  <a href="https://huggingface.co/datasets/aliIranmanesh/HearSayBench" target="_blank" class="external-link button is-normal is-rounded is-warning">
+                  <a href="https://huggingface.co/datasets/aliIranmanesh/HearSayBench" target="_blank"
+                    class="external-link button is-normal is-rounded is-warning">
                     <span class="icon"><i class="fa-solid fa-face-smile"></i></span>
                     <span>Hugging Face Dataset</span>
                   </a>
@@ -87,7 +95,8 @@
 
                 <!-- GitHub Code Link -->
                 <span class="link-block">
-                  <a href="https://github.com/Aliiiranmanesh/hearSay" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                  <a href="https://github.com/Aliiiranmanesh/hearSay" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
                     <span class="icon"><i class="fab fa-github"></i></span>
                     <span>Code Repository</span>
                   </a>
@@ -126,13 +135,26 @@
           <h2 class="title is-3">Abstract</h2>
           <div class="content has-text-justified abstract-text">
             <p>
-              Large language models (LLMs) have become the default advisors for life-critical human problems. While they democratize access to personal counseling, they suffer from a silent foundation bias: <em>the internet is a record of people with the freedom to act</em>. Current benchmarks assume users have this same agency, ignoring the reality of those in war zones or navigating statelessness. These long-tail experiences are not only missing from training data, but authentic evaluation data to measure them is equally scarce.
+              Large language models (LLMs) have become the default advisors for life-critical human problems. While they
+              democratize access to personal counseling, they suffer from a silent foundation bias: <em>the internet is
+                a record of people with the freedom to act</em>. Current benchmarks assume users have this same agency,
+              ignoring the reality of those in war zones or navigating statelessness. These long-tail experiences are
+              not only missing from training data, but authentic evaluation data to measure them is equally scarce.
             </p>
             <p>
-              We introduce <strong>HEARSAYBENCH</strong>, a human-verified dataset of scenarios from respected archives like the United Nations, covering 80 regions across three specific barriers: <strong>social</strong>, <strong>personal</strong>, and <strong>environmental</strong>. Our work uses Amartya Sen's <em>Capabilities Approach</em> to test if a model can distinguish between what a person is legally promised and what they are actually free to do in their specific environment.
+              We introduce <strong>HEARSAYBENCH</strong>, a human-verified dataset of scenarios from respected archives
+              like the United Nations, covering 80 regions across three specific barriers: <strong>social</strong>,
+              <strong>personal</strong>, and <strong>environmental</strong>. Our work uses Amartya Sen's
+              <em>Capabilities Approach</em> to test if a model can distinguish between what a person is legally
+              promised and what they are actually free to do in their specific environment.
             </p>
             <p>
-              While models may have "heard" about global inequality during training, we find that this knowledge is merely hearsay. Across frontier and open-weight models, we identify a systemic performance drop between situational comprehension and structural reasoning. When faced with the most vulnerable users, models consistently offer a <strong>"Checklist of Impossible Things"</strong>: polite, fluent advice that is physically impossible or legally suicidal to follow. Ultimately, we show that the true digital divide is no longer about access to technology, but whether an AI can recognize the reality of your life.
+              While models may have "heard" about global inequality during training, we find that this knowledge is
+              merely hearsay. Across frontier and open-weight models, we identify a systemic performance drop between
+              situational comprehension and structural reasoning. When faced with the most vulnerable users, models
+              consistently offer a <strong>"Checklist of Impossible Things"</strong>: polite, fluent advice that is
+              physically impossible or legally suicidal to follow. Ultimately, we show that the true digital divide is
+              no longer about access to technology, but whether an AI can recognize the reality of your life.
             </p>
           </div>
         </div>
@@ -145,65 +167,52 @@
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Theoretical Framework: Sen's Capabilities Approach</h2>
       <p class="subtitle is-6 has-text-centered text-muted">
-        Operationalizing Nobel laureate Amartya Sen's framework to measure the <strong>Capability Void</strong> and <strong>Agency Bias</strong>.
+        Operationalizing Nobel laureate Amartya Sen's framework to measure the <strong>Capability Void</strong> and
+        <strong>Agency Bias</strong>.
       </p>
 
       <div class="columns is-multiline key-cards mt-4">
         <div class="column is-4">
           <div class="box metric-box">
             <h3 class="title is-5"><i class="fa-solid fa-users-slash icon-color"></i> Social Conversion Factors</h3>
-            <p>External structural cages created by society, state policy, and power dynamics (e.g. statelessness, Kafala system, travel bans, caste hierarchies, and police coercion).</p>
+            <p>External structural cages created by society, state policy, and power dynamics (e.g. statelessness,
+              Kafala system, travel bans, caste hierarchies, and police coercion).</p>
           </div>
         </div>
         <div class="column is-4">
           <div class="box metric-box">
             <h3 class="title is-5"><i class="fa-solid fa-mountain-city icon-color"></i> Environmental Factors</h3>
-            <p>Material, geographic, and macro-economic constraints (e.g. infrastructure collapse, state-enforced internet blackouts, active conflict zones, and hyperinflation).</p>
+            <p>Material, geographic, and macro-economic constraints (e.g. infrastructure collapse, state-enforced
+              internet blackouts, active conflict zones, and hyperinflation).</p>
           </div>
         </div>
         <div class="column is-4">
           <div class="box metric-box">
             <h3 class="title is-5"><i class="fa-solid fa-user-lock icon-color"></i> Personal Factors</h3>
-            <p>Internal somatic realities and capacities (e.g. physical disabilities, somatic consequences of FGM, severe cognitive distress, skill & literacy barriers).</p>
+            <p>Internal somatic realities and capacities (e.g. physical disabilities, somatic consequences of FGM,
+              severe cognitive distress, skill & literacy barriers).</p>
           </div>
-        </div>
       </div>
-
-      <!-- Failure Modes Taxonomy Box -->
-      <div class="box taxonomy-box mt-5">
-        <h3 class="title is-4"><i class="fa-solid fa-triangle-exclamation text-danger"></i> Taxonomy of Structural Reasoning Failures</h3>
-        <div class="columns">
-          <div class="column is-4">
-            <h4 class="title is-6 mb-2">1. Hallucinated Institutional Infrastructure</h4>
-            <p class="is-size-7">Model assumes a Western baseline of banking, legal, or emergency access that is physically or legally nonexistent for the user.</p>
-          </div>
-          <div class="column is-4">
-            <h4 class="title is-6 mb-2">2. Structural Authority Bias</h4>
-            <p class="is-size-7">Model trusts state authorities (police, transit officers) as neutral arbiters, ignoring that in authoritarian or stateless contexts, law enforcement is an active threat vector.</p>
-          </div>
-          <div class="column is-4">
-            <h4 class="title is-6 mb-2">3. Individual Agency Fallacy</h4>
-            <p class="is-size-7">Model suggests Western therapeutic boundary-setting (e.g. "saying no" or "open communication") in environments governed by rigid debt bondage or forced marriage.</p>
-          </div>
-        </div>
-      </div>
-
     </div>
   </section>
+
 
   <!-- Interactive Leaderboard Section -->
   <section class="section alt-bg" id="leaderboard-section">
     <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered"><i class="fas fa-trophy highlight-icon"></i> HEARSAYBENCH Model Leaderboard (N = 400)</h2>
+      <h2 class="title is-3 has-text-centered"><i class="fas fa-trophy highlight-icon"></i> HEARSAYBENCH Model
+        Leaderboard (N = 400)</h2>
       <p class="subtitle is-6 has-text-centered text-muted">
-        Evaluated along 4 core capability dimensions (1–5 scale, weighted mean) and safety harm scores across 400 socio-legal scenarios.
+        Evaluated along 4 core capability dimensions (1–5 scale, weighted mean) and safety harm scores across 400
+        socio-legal scenarios.
       </p>
 
       <!-- Controls & Filters -->
       <div class="level leaderboard-controls">
         <div class="level-left">
           <div class="buttons has-addons filter-buttons">
-            <button class="button is-small is-rounded is-primary filter-btn active" data-filter="all">All Models (14)</button>
+            <button class="button is-small is-rounded is-primary filter-btn active" data-filter="all">All Models
+              (14)</button>
             <button class="button is-small is-rounded filter-btn" data-filter="Anthropic">Anthropic</button>
             <button class="button is-small is-rounded filter-btn" data-filter="Google">Google</button>
             <button class="button is-small is-rounded filter-btn" data-filter="OpenAI">OpenAI</button>
@@ -214,7 +223,8 @@
         <div class="level-right">
           <div class="field">
             <p class="control has-icons-left">
-              <input class="input is-small is-rounded" id="leaderboard-search" type="text" placeholder="Search model name...">
+              <input class="input is-small is-rounded" id="leaderboard-search" type="text"
+                placeholder="Search model name...">
               <span class="icon is-small is-left"><i class="fas fa-search"></i></span>
             </p>
           </div>
@@ -228,11 +238,15 @@
             <tr>
               <th data-sort="rank" class="sortable">Rank <i class="fas fa-sort"></i></th>
               <th data-sort="model" class="sortable">Model <i class="fas fa-sort"></i></th>
-              <th data-sort="situational_comprehension" class="sortable">Situational Comp. <i class="fas fa-sort"></i></th>
+              <th data-sort="situational_comprehension" class="sortable">Situational Comp. <i class="fas fa-sort"></i>
+              </th>
               <th data-sort="capability_freedom" class="sortable">Capability & Freedom <i class="fas fa-sort"></i></th>
-              <th data-sort="register_appropriateness" class="sortable">Register Approp. <i class="fas fa-sort"></i></th>
-              <th data-sort="honesty_uncertainty" class="sortable">Honesty / Uncertainty <i class="fas fa-sort"></i></th>
-              <th data-sort="weighted_score" class="sortable sorted-desc">Capability Score <i class="fas fa-sort-down"></i></th>
+              <th data-sort="register_appropriateness" class="sortable">Register Approp. <i class="fas fa-sort"></i>
+              </th>
+              <th data-sort="honesty_uncertainty" class="sortable">Honesty / Uncertainty <i class="fas fa-sort"></i>
+              </th>
+              <th data-sort="weighted_score" class="sortable sorted-desc">Capability Score <i
+                  class="fas fa-sort-down"></i></th>
               <th data-sort="safety_harm_avg" class="sortable">Safety (Harm Avg) <i class="fas fa-sort"></i></th>
             </tr>
           </thead>
@@ -247,7 +261,8 @@
   <!-- Interactive 400 Scenarios Explorer Section -->
   <section class="section" id="scenarios-section">
     <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered"><i class="fas fa-search highlight-icon"></i> Explore 400 Socio-Legal Scenarios</h2>
+      <h2 class="title is-3 has-text-centered"><i class="fas fa-search highlight-icon"></i> Explore 400 Socio-Legal
+        Scenarios</h2>
       <p class="subtitle is-6 has-text-centered text-muted">
         Browse human-verified scenarios, user conversational signals, WEIRD institutional priors, and legal impediments.
       </p>
@@ -265,7 +280,8 @@
         <div class="level-right">
           <div class="field">
             <p class="control has-icons-left">
-              <input class="input is-small is-rounded" id="scenario-search" type="text" placeholder="Search keyword (e.g. asylum, Sami, worker, child)...">
+              <input class="input is-small is-rounded" id="scenario-search" type="text"
+                placeholder="Search keyword (e.g. asylum, Sami, worker, child)...">
               <span class="icon is-small is-left"><i class="fas fa-search"></i></span>
             </p>
           </div>
@@ -280,7 +296,8 @@
       </div>
 
       <div class="has-text-centered mt-5">
-        <button id="load-more-btn" class="button is-medium is-outlined is-info is-rounded"><i class="fas fa-plus"></i> Load More Scenarios</button>
+        <button id="load-more-btn" class="button is-medium is-outlined is-info is-rounded"><i class="fas fa-plus"></i>
+          Load More Scenarios</button>
       </div>
     </div>
   </section>
@@ -289,12 +306,13 @@
   <section class="section alt-bg" id="figures-section">
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Experimental Figures & Visualizations</h2>
-      
+
       <div class="columns is-centered">
         <div class="column is-6">
           <div class="box figure-box">
             <h4 class="title is-5">Capability vs. Safety Comparison</h4>
-            <p class="is-size-7 text-muted mb-3">Grouped bar chart showing model capability score vs safety harm average.</p>
+            <p class="is-size-7 text-muted mb-3">Grouped bar chart showing model capability score vs safety harm
+              average.</p>
             <img src="charts/capability_vs_safety_bars.png" alt="Capability vs Safety Comparison" loading="lazy">
           </div>
         </div>
@@ -331,7 +349,8 @@
     <div class="container is-max-desktop content">
       <h2 class="title is-3">BibTeX</h2>
       <div class="citation-box">
-        <button class="button is-small is-light copy-bib-btn" onclick="copyBibtex()"><i class="far fa-copy"></i> Copy BibTeX</button>
+        <button class="button is-small is-light copy-bib-btn" onclick="copyBibtex()"><i class="far fa-copy"></i> Copy
+          BibTeX</button>
         <pre><code id="bibtex-code">@inproceedings{iranmanesh2026hearsaybench,
   title={HEARSAYBENCH: Can LLMs Navigate from Abstract Human Rights to Lived Lives?},
   author={Iranmanesh, Ava and Lotfi, Sobhan and Iranmanesh, Ali and Jiang, Liwei},
@@ -348,10 +367,13 @@
     <div class="container">
       <div class="content has-text-centered">
         <p>
-          <strong>HEARSAYBENCH</strong> by <a href="https://github.com/Aliiiranmanesh/hearSay">Ava Iranmanesh, Sobhan Lotfi, Ali Iranmanesh, and Liwei Jiang</a>. Dataset licensed under <a href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0 International</a>.
+          <strong>HEARSAYBENCH</strong> by <a href="https://github.com/Aliiiranmanesh/hearSay">Ava Iranmanesh, Sobhan
+            Lotfi, Ali Iranmanesh, and Liwei Jiang</a>. Dataset licensed under <a
+            href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0 International</a>.
         </p>
         <p class="is-size-7 text-muted">
-          Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> & <a href="https://ovmm.github.io/">HomeRobot OVMM</a>.
+          Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> made by <a
+            href="https://github.com/Aliiiranmanesh/">Ali Iranmanesh</a>.
         </p>
       </div>
     </div>
@@ -360,4 +382,5 @@
   <!-- Custom App JS -->
   <script src="app.js"></script>
 </body>
+
 </html>
