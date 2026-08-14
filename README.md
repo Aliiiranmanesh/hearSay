@@ -62,7 +62,13 @@ Evaluation of **14 state-of-the-art Large Language Models** across 400 hand-cura
   <img src="merged/charts/capability_vs_safety_tradeoff.png" width="48%" alt="Capability vs Safety Trade-off" />
 </p>
 
+<p align="center">
+  <img src="merged/charts/capability_vs_safety_bars.png" width="48%" alt="Capability vs Safety Side-by-Side Comparison" />
+  <img src="merged/charts/model_dimensions_heatmap.png" width="48%" alt="Model Dimension Performance Heatmap" />
+</p>
+
 ---
+
 
 
 ## 📂 Repository Structure
