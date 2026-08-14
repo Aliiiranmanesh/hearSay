@@ -5,7 +5,7 @@ from pathlib import Path
 from run_batch import parse_entries, process_entries, load_entries_from_hf
 from run_judge import run_judge
 from merge import merge
-from score_extract import extract_scores
+
 
 
 def main():
@@ -118,18 +118,11 @@ def main():
         print("=" * 60)
         merge(responses_dir=responses_dir, out_dir=merged_dir)
 
-    # 4: Extract scores
-    if "all" in steps or "scores" in steps:
-        print("\n" + "=" * 60)
-        print("STEP 4 — Extracting judge scores")
-        print("=" * 60)
-        extract_scores(responses_dir=responses_dir, out_path=merged_dir / "scores.json",)
-        
-        print("\n" + "=" * 60)
-        print("STEP 5 — Appending harm evaluations to merged files")
-        print("=" * 60)
-        from add_harm_to_merged import add_harm_to_merged
-        add_harm_to_merged(responses_dir=responses_dir, merged_dir=merged_dir)
+    # 4: Analyze and compute scores
+    if "all" in steps or "scores" in steps or "analyze" in steps:
+        from analyze import run_analysis
+        run_analysis(responses_dir=responses_dir, merged_dir=merged_dir)
+
 
     print("\n" + "=" * 60)
     print(f"Pipeline complete. Final files in: {merged_dir}/")
