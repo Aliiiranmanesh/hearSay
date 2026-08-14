@@ -149,5 +149,5 @@ If you use **HearSayBench** in your research, please cite our paper:
 
 ---
 
-## 📜 License
+## License
 This benchmark dataset is distributed under the **Creative Commons Attribution 4.0 International (CC BY 4.0)** license.
