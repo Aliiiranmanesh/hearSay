@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HearSayBench — Evaluating LLMs on Underrepresented Socio-Legal Scenarios</title>
+  <meta name="description" content="HearSayBench evaluates Large Language Models on 400 underrepresented socio-legal scenarios applying the Capabilities Approach framework." />
+  
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-brand">
+        <span class="brand-icon"><i class="fa-solid fa-scale-balanced"></i></span>
+        <span class="brand-text">HearSay<span>Bench</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#leaderboard"><i class="fa-solid fa-trophy"></i> Leaderboard</a>
+        <a href="#scenarios"><i class="fa-solid fa-list-check"></i> Scenarios (400)</a>
+        <a href="#visualizations"><i class="fa-solid fa-chart-column"></i> Charts</a>
+        <a href="#code"><i class="fa-solid fa-code"></i> Quick Start</a>
+        <a href="#citation"><i class="fa-solid fa-quote-left"></i> Citation</a>
+      </div>
+      <div class="nav-actions">
+        <a href="https://huggingface.co/datasets/aliIranmanesh/HearSayBench" target="_blank" class="btn btn-hf">
+          <i class="fa-solid fa-face-smile"></i> Hugging Face
+        </a>
+        <a href="https://github.com/Aliiiranmanesh/hearSay" target="_blank" class="btn btn-github">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-container">
+      <div class="hero-badges">
+        <span class="badge badge-primary"><i class="fa-solid fa-award"></i> NeurIPS 2026 Submission</span>
+        <span class="badge badge-secondary"><i class="fa-solid fa-layer-group"></i> 400 Hand-Curated Scenarios</span>
+        <span class="badge badge-accent"><i class="fa-solid fa-brain"></i> 14 LLMs Evaluated</span>
+      </div>
+      <h1 class="hero-title">
+        HearSayBench: Evaluating Large Language Models on <span class="gradient-text">Underrepresented Socio-Legal Scenarios</span>
+      </h1>
+      <p class="hero-subtitle">
+        Applying the <strong>Capabilities Approach</strong> framework (Sen, 1999; Nussbaum, 2011) to test whether LLMs maintain accurate world models for individuals whose real-world struggles and conversion impediments are structurally missing from web training corpora.
+      </p>
+      
+      <div class="hero-buttons">
+        <a href="#leaderboard" class="btn btn-primary btn-lg"><i class="fa-solid fa-trophy"></i> View Leaderboard</a>
+        <a href="#scenarios" class="btn btn-outline btn-lg"><i class="fa-solid fa-magnifying-glass"></i> Explore 400 Scenarios</a>
+        <a href="https://huggingface.co/datasets/aliIranmanesh/HearSayBench" target="_blank" class="btn btn-outline btn-lg"><i class="fa-solid fa-download"></i> Load Dataset</a>
+      </div>
+
+      <!-- Quick Metrics Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon"><i class="fa-solid fa-database"></i></div>
+          <div class="metric-value">400</div>
+          <div class="metric-label">Curated Socio-Legal Scenarios</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon"><i class="fa-solid fa-microchip"></i></div>
+          <div class="metric-value">14</div>
+          <div class="metric-label">State-of-the-Art LLMs</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon"><i class="fa-solid fa-sliders"></i></div>
+          <div class="metric-value">4 + 2</div>
+          <div class="metric-label">Capability & Safety Dimensions</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon"><i class="fa-solid fa-check-double"></i></div>
+          <div class="metric-value">5,600</div>
+          <div class="metric-label">Total Graded Evaluations</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: Leaderboard -->
+    <section id="leaderboard" class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-trophy highlight-icon"></i> Benchmark Leaderboard (N = 400)</h2>
+        <p class="section-desc">
+          Evaluated along 4 core capability dimensions (1–5 scale, weighted mean) and safety harm scores.
+        </p>
+      </div>
+
+      <!-- Leaderboard Controls -->
+      <div class="controls-bar">
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="all">All Models (14)</button>
+          <button class="filter-btn" data-filter="Anthropic">Anthropic</button>
+          <button class="filter-btn" data-filter="Google">Google</button>
+          <button class="filter-btn" data-filter="OpenAI">OpenAI</button>
+          <button class="filter-btn" data-filter="DeepSeek">DeepSeek</button>
+          <button class="filter-btn" data-filter="Open Source">Open Weight</button>
+        </div>
+        <div class="search-box">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="leaderboard-search" placeholder="Search model name..." />
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="table-responsive">
+        <table class="leaderboard-table" id="leaderboard-table">
+          <thead>
+            <tr>
+              <th data-sort="rank" class="sortable">Rank <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="model" class="sortable">Model <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="situational_comprehension" class="sortable">Situational Comp. <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="capability_freedom" class="sortable">Capability & Freedom <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="register_appropriateness" class="sortable">Register Approp. <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="honesty_uncertainty" class="sortable">Honesty / Uncertainty <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="weighted_score" class="sortable sorted-desc">Capability Score <i class="fa-solid fa-sort-down"></i></th>
+              <th data-sort="safety_harm_avg" class="sortable">Safety (Harm Avg) <i class="fa-solid fa-sort"></i></th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <!-- Dynamic JS Insertion -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 2: Interactive Scenario Explorer -->
+    <section id="scenarios" class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-magnifying-glass highlight-icon"></i> Explore 400 Socio-Legal Scenarios</h2>
+        <p class="section-desc">
+          Search ground truth real-world contexts, prompts, WEIRD priors, and legal/social conversion impediments.
+        </p>
+      </div>
+
+      <!-- Search & Category Filters -->
+      <div class="controls-bar">
+        <div class="filter-group" id="category-filters">
+          <button class="cat-btn active" data-cat="all">All Categories</button>
+          <button class="cat-btn" data-cat="Social">Social</button>
+          <button class="cat-btn" data-cat="Personal">Personal</button>
+          <button class="cat-btn" data-cat="Environmental">Environmental</button>
+        </div>
+        <div class="search-box">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="scenario-search" placeholder="Search keyword (e.g. asylum, Sami, worker, child)..." />
+        </div>
+      </div>
+
+      <div class="scenarios-counter" id="scenarios-counter">Showing 400 of 400 scenarios</div>
+
+      <!-- Scenarios Grid -->
+      <div class="scenarios-grid" id="scenarios-grid">
+        <!-- Dynamic JS Insertion -->
+      </div>
+
+      <!-- Pagination / Load More -->
+      <div class="pagination-container">
+        <button id="load-more-btn" class="btn btn-outline"><i class="fa-solid fa-plus"></i> Load More Scenarios</button>
+      </div>
+    </section>
+
+    <!-- Section 3: Visualizations & Charts -->
+    <section id="visualizations" class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-chart-column highlight-icon"></i> Experimental Visualizations</h2>
+        <p class="section-desc">Publication-ready figures from our comprehensive N=400 evaluation across 14 LLMs.</p>
+      </div>
+
+      <div class="charts-gallery">
+        <div class="chart-card">
+          <h3>Model Capability vs. Safety Trade-off</h3>
+          <p>Scatter plot comparing Weighted Capability Score (X-axis) against Safety Harm Score (Y-axis).</p>
+          <img src="charts/capability_vs_safety_tradeoff.png" alt="Capability vs Safety Scatter Plot" loading="lazy" />
+        </div>
+        <div class="chart-card">
+          <h3>Capability vs. Safety Side-by-Side Comparison</h3>
+          <p>Grouped bar chart illustrating the gap between Model Capability and Safety filtering.</p>
+          <img src="charts/capability_vs_safety_bars.png" alt="Capability vs Safety Bar Chart" loading="lazy" />
+        </div>
+        <div class="chart-card">
+          <h3>Overall Capability Model Ranking</h3>
+          <p>Ranked capability bar chart across all 14 models with viridis color scale.</p>
+          <img src="charts/model_capability_ranking.png" alt="Model Capability Ranking" loading="lazy" />
+        </div>
+        <div class="chart-card">
+          <h3>Dimension Performance Heatmap</h3>
+          <p>Heatmap breakdown across all 4 capability dimensions per model.</p>
+          <img src="charts/model_dimensions_heatmap.png" alt="Dimension Heatmap" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Quick Start Code Snippets -->
+    <section id="code" class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-code highlight-icon"></i> Quick Start & Pipeline Usage</h2>
+        <p class="section-desc">Load HearSayBench directly in Python or run the evaluation pipeline from GitHub.</p>
+      </div>
+
+      <div class="code-grid">
+        <div class="code-card">
+          <div class="code-header">
+            <span><i class="fa-brands fa-python"></i> Load via Hugging Face Datasets</span>
+            <button class="copy-btn" onclick="copyCode('hf-code')"><i class="fa-regular fa-copy"></i> Copy</button>
+          </div>
+          <pre><code id="hf-code">from datasets import load_dataset
+
+# Load HearSayBench dataset (400 socio-legal scenarios)
+dataset = load_dataset("aliIranmanesh/HearSayBench")
+
+# Inspect the first scenario
+first_entry = dataset["train"][0]
+print(f"Scenario: {first_entry['scenario']}")
+print(f"Prompt: {first_entry['prompt']}")</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-header">
+            <span><i class="fa-solid fa-terminal"></i> Run Evaluation Pipeline</span>
+            <button class="copy-btn" onclick="copyCode('cli-code')"><i class="fa-regular fa-copy"></i> Copy</button>
+          </div>
+          <pre><code id="cli-code"># Clone repository & install dependencies
+git clone https://github.com/Aliiiranmanesh/hearSay.git
+cd hearSay
+pip install -r requirements.txt
+
+# Run pipeline with dynamic HF loading
+python run_pipeline.py aliIranmanesh/HearSayBench --model gemini-3.5-flash</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Citation -->
+    <section id="citation" class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-quote-left highlight-icon"></i> Citation</h2>
+        <p class="section-desc">If you use HearSayBench in your research, please cite our paper:</p>
+      </div>
+
+      <div class="citation-card">
+        <div class="code-header">
+          <span><i class="fa-solid fa-book"></i> BibTeX</span>
+          <button class="copy-btn" onclick="copyCode('bibtex-code')"><i class="fa-regular fa-copy"></i> Copy BibTeX</button>
+        </div>
+        <pre><code id="bibtex-code">@inproceedings{iranmanesh2026hearsaybench,
+  title={HearSayBench: Evaluating Large Language Models on Underrepresented Socio-Legal Scenarios},
+  author={Iranmanesh, Ali and collaborators},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track},
+  year={2026},
+  url={https://huggingface.co/datasets/aliIranmanesh/HearSayBench}
+}</code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-text">HearSay<span>Bench</span></span>
+        <p>Evaluating LLMs on Underrepresented Socio-Legal Scenarios under the Capabilities Approach.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://huggingface.co/datasets/aliIranmanesh/HearSayBench" target="_blank"><i class="fa-solid fa-face-smile"></i> Hugging Face Dataset</a>
+        <a href="https://github.com/Aliiiranmanesh/hearSay" target="_blank"><i class="fa-brands fa-github"></i> GitHub Repository</a>
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"><i class="fa-solid fa-copyright"></i> CC BY 4.0 License</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 HearSayBench Project. Released under CC BY 4.0 International License.</p>
+    </div>
+  </footer>
+
+  <!-- Custom JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
