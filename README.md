@@ -142,13 +142,14 @@ If you use **HearSayBench** in your research, please cite our paper:
 
 ```bibtex
 @inproceedings{iranmanesh2026hearsaybench,
-  title={HearSayBench: Evaluating Large Language Models on Underrepresented Socio-Legal Scenarios},
-  author={Iranmanesh, Ali and collaborators},
-  booktitle={Advances in Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track},
+  title={HEARSAYBENCH: Can LLMs Navigate from Abstract Human Rights to Lived Lives?},
+  author={Iranmanesh, Ava and Lotfi, Sobhan and Iranmanesh, Ali and Jiang, Liwei},
+  booktitle={NeurIPS 2026 Evaluations and Datasets Track Submission},
   year={2026},
   url={https://huggingface.co/datasets/aliIranmanesh/HearSayBench}
 }
 ```
+
 
 ---
 
