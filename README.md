@@ -73,29 +73,32 @@ Evaluation of **14 state-of-the-art Large Language Models** across 400 hand-cura
 HearSayBench/
 ├── README.md                      # Publication documentation & benchmark leaderboard
 ├── .env.example                   # API credentials template
+├── .gitignore                     # Git ignore rules
 ├── requirements.txt               # Dependencies
+├── metadata.json                  # Croissant 1.0 ML metadata
+├── croissant.json                 # Croissant 1.0 ML metadata schema
 │
-├── run_pipeline.py                # End-to-end evaluation pipeline execution wrapper
+├── run_pipeline.py                # End-to-end evaluation pipeline wrapper
 ├── run_batch.py                   # Multi-provider LLM response collection client
 ├── run_judge.py                   # Automated LLM-as-a-Judge grading client
-├── evaluator.py                   # Capability Evaluation metrics & prompts
+├── evaluator.py                   # Capability evaluation prompts & templates
 ├── harm_eval.py                   # Safety & harm evaluation grader
-├── analyze_scores.py              # Descriptive statistics, CIs & statistical analysis
-├── calculate_averages.py          # Aggregate score calculator
+├── analyze.py                     # Consolidated scoring, harm merge, & statistical analysis
 ├── llm_client.py                  # API client wrappers (Gemini, OpenAI, Together, Anthropic)
-├── hug.py                         # Hugging Face deployment script
 │
-├── merged/
-│   ├── scores.json                # Consolidated model evaluation judgments (400 entries)
-│   ├── harm_scores.json           # Safety & harm evaluations (400 entries)
-│   ├── analyze_scores_report.txt  # Statistical report & 95% CIs
-│   └── charts/                    # Publication-ready visualizations
-│       ├── model_capability_ranking.png
-│       ├── capability_vs_safety_tradeoff.png
-│       └── model_dimensions_heatmap.png
-│
-└── responses/                     # Model generations & judgment logs (entry_0001/ to entry_0400/)
+└── merged/                        # Consolidated Benchmark Results & Visualizations
+    ├── scores.json                # Capability judgment scores across models (400 entries)
+    ├── harm_scores.json           # Safety & harm evaluation scores (400 entries)
+    ├── analyze_scores_report.txt  # Statistical analysis report & 95% CIs
+    ├── <model_name>.json          # Per-model detailed evaluations
+    └── charts/                    # High-resolution benchmark visualizations
+        ├── capability_vs_safety_bars.png
+        ├── capability_vs_safety_tradeoff.png
+        ├── model_capability_ranking.png
+        ├── model_dimensions_bars.png
+        └── model_dimensions_heatmap.png
 ```
+
 
 ---
 
