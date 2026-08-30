@@ -173,6 +173,21 @@ def extract_scores(responses_dir: Path, merged_dir: Path) -> dict:
 
         scores[prompt] = entry_scores
 
+    # Preserve any existing scores for prompts not re-extracted in this run
+    if out_path.exists():
+        try:
+            existing_data = json.loads(out_path.read_text(encoding="utf-8"))
+            for p, p_scores in existing_data.items():
+                if p not in scores:
+                    scores[p] = p_scores
+                elif isinstance(p_scores, dict) and isinstance(scores[p], dict):
+                    # Keep any models that weren't present in the fresh extraction
+                    for m, m_val in p_scores.items():
+                        if scores[p].get(m) is None and m_val is not None:
+                            scores[p][m] = m_val
+        except Exception:
+            pass
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(scores, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Saved extracted scores to: {out_path} ({len(scores)} entries, {missing} missing)")
